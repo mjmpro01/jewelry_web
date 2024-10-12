@@ -3,6 +3,10 @@ import { paths } from '../constants/paths';
 import RootLayout from '../components/layouts/RootLayout';
 import Home from '../pages/Home';
 import ProductDetail from '../pages/ProductDetail';
+import Checkout from '../pages/Checkout';
+import Login from '../pages/Login';
+import AuthLayout from '../components/layouts/AuthLayout';
+import Register from '../pages/Register';
 
 const router = createBrowserRouter([
   // {
@@ -35,7 +39,25 @@ const router = createBrowserRouter([
         path: `${paths.PRODUCTS}/:slug`,
         element: <ProductDetail />,
       },
+      {
+        path: `${paths.CHECKOUT}`,
+        element: <Checkout />,
+      },
     ],
+  },
+  {
+    path: `${paths.HOME}`,
+    element: <AuthLayout />,
+    children: [
+      {
+        path: `${paths.LOGIN}`,
+        element: <Login />,
+      },
+      {
+        path: `${paths.REGISTER}`,
+        element: <Register />,
+      },
+    ]
   },
 ])
 

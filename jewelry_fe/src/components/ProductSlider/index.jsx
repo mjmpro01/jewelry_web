@@ -1,92 +1,108 @@
+import { useState } from 'react';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { useKeenSlider } from "keen-slider/react"
-import "keen-slider/keen-slider.min.css"
-import { images } from "../../assets/images"
-import { useEffect } from "react"
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
+import 'swiper/css/thumbs';
 
-function ThumbnailPlugin(mainRef) {
-  return (slider) => {
-    function removeActive() {
-      slider.slides.forEach((slide) => {
-        slide.classList.remove("active")
-      })
-    }
-    function addActive(idx) {
-      slider.slides[idx].classList.add("active")
-    }
+// import './styles.css';
 
-    function addClickEvents() {
-      slider.slides.forEach((slide, idx) => {
-        slide.addEventListener("click", () => {
-          if (mainRef.current) mainRef.current.moveToIdx(idx)
-        })
-      })
-    }
+// import required modules
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 
-    slider.on("created", () => {
-      if (!mainRef.current) return
-      addActive(slider.track.details.rel)
-      addClickEvents()
-      mainRef.current.on("animationStarted", (main) => {
-        removeActive()
-        const next = main.animator.targetIdx || 0
-        addActive(main.track.absToRel(next))
-        slider.moveToIdx(Math.min(slider.track.details.maxIdx, next))
-      })
-    })
-  }
-}
-
-const ProductSlider = () => {
-  const [sliderRef, instanceRef] = useKeenSlider({
-    initial: 0,
-    resizeObserver: true,
-  })
-  const [thumbnailRef] = useKeenSlider(
-    {
-      initial: 0,
-      slides: {
-        perView: 4,
-        spacing: 10,
-      },
-      resizeObserver: true,
-    },
-    [ThumbnailPlugin(instanceRef)]
-  )
-
-  useEffect(() => {
-    if (instanceRef?.current) {
-      console.log("Keen slider instance:", instanceRef.current)
-    }
-  }, [instanceRef])
+export default function App() {
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   return (
-    <div className="flex flex-col gap-4 max-w-[600px] ">
-      <div ref={sliderRef} className="keen-slider border-[0.5px] rounded-2xl aspect-[9/10]">
-        {Array.from({ length: 5 }).map(index => (
-          <img
-            key={index}
-            src={images.ring}
-            width={600}
-            height={600}
-            className="keen-slider__slide aspect-[9/10] w-full h-auto object-cover min-w-full"
-          />
-        ))}
-      </div>
+    <div className='max-w-[600px] w-full flex'>
+      <Swiper
+        onSwiper={setThumbsSwiper}
+        spaceBetween={10}
+        slidesPerView={5}
+        freeMode={true}
+        watchSlidesProgress={true}
+        modules={[FreeMode, Navigation, Thumbs]}
+        className="mySwiper"
+        direction="vertical"
+      >
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
+        </SwiperSlide>
+      </Swiper>
 
-      <div ref={thumbnailRef} className="keen-slider thumbnail">
-        {Array.from({ length: 5 }).map(index => (
-          <img
-            key={index}
-            src={images.ring}
-            width={600}
-            height={600}
-            className="keen-slider__slide aspect-square w-full h-full"
-          />
-        ))}
-      </div>
+      <Swiper
+        style={{
+          '--swiper-navigation-color': '#fff',
+          '--swiper-pagination-color': '#fff',
+        }}
+        spaceBetween={10}
+        slidesPerView={1}
+        thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+        modules={[FreeMode, Thumbs]}
+        className="mySwiper2 flex-1"
+        direction="vertical"
+      >
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
+        </SwiperSlide>
+      </Swiper>
     </div>
-  )
+  );
 }
-
-export default ProductSlider
