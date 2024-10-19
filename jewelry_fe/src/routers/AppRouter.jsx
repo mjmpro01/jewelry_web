@@ -7,6 +7,12 @@ import Checkout from '../pages/Checkout';
 import Login from '../pages/Login';
 import AuthLayout from '../components/layouts/AuthLayout';
 import Register from '../pages/Register';
+import AdminLayout from '../components/layouts/AdminLayout';
+import Dashboard from '../pages/Admin/Dashboard';
+import ManageProducts from '../pages/Admin/ManageProducts';
+import ManageCategories from '../pages/Admin/ManageCategories';
+import ManageOrders from '../pages/Admin/ManageOrders';
+import LoginAdmin from '../pages/Admin/Login';
 
 const router = createBrowserRouter([
   // {
@@ -57,6 +63,42 @@ const router = createBrowserRouter([
         path: `${paths.REGISTER}`,
         element: <Register />,
       },
+    ]
+  },
+  {
+    path: `${paths.ADMIN}`,
+    element: <AuthLayout />,
+    children: [
+      {
+        path: `${paths.ADMIN}${paths.LOGIN}`,
+        element: <LoginAdmin />
+      },
+    ]
+  },
+  {
+    path: `${paths.ADMIN}`,
+    element: <AdminLayout />,
+    children: [
+      {
+        path: `${paths.ADMIN}${paths.DASHBOARD}`,
+        element: <Dashboard />
+      },
+      {
+        path: `${paths.ADMIN}${paths.LOGIN}`,
+        element: <Login />,
+      },
+      {
+        path: `${paths.ADMIN}${paths.MANAGE_PRODUCTS}`,
+        element: <ManageProducts />,
+      },
+      {
+        path: `${paths.ADMIN}${paths.MANAGE_CATEGORIES}`,
+        element: <ManageCategories />,
+      },
+      {
+        path: `${paths.ADMIN}${paths.MANAGE_ORDERS}`,
+        element: <ManageOrders />,
+      }
     ]
   },
 ])

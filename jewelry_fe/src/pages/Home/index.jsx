@@ -1,8 +1,20 @@
+import { useEffect } from "react"
 import { images } from "../../assets/images"
 import HomeBannerSlider from "../../components/HomeBannerSlider"
 import ProductCard from "../../components/ProductCard"
+import productsApi from "../../apis/products"
 
 const Home = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const products = await productsApi.getAll()
+        .then(res => res.data);
+      console.log("🚀 ~ file: index.jsx:12 ~ fetchData ~ products:", products)
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <div className="p-4">
       <div className="mb-4">
