@@ -26,10 +26,6 @@ export class CreateProductInput {
   price: number;
 
   @ApiProperty()
-  @IsString()
-  sku: string;
-
-  @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
