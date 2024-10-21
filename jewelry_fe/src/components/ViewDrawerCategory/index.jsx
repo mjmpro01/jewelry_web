@@ -32,6 +32,10 @@ const ViewDrawerCategory = ({ open, onClose, category, refetchData, ...rest }) =
     await categoriesApi.update(categoryData?.id, {
       name: values.name,
       description: values.description,
+    }).catch(e => {
+      console.log(e);
+      setIsSubmitLoading(false);
+      return;
     })
 
     setTimeout(async () => {
@@ -40,6 +44,7 @@ const ViewDrawerCategory = ({ open, onClose, category, refetchData, ...rest }) =
       await refetchData();
       message.success("Sửa thành công")
       onClose();
+      return;
     }, 1500)
   }
 

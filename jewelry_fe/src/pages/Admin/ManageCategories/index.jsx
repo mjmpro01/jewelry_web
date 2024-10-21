@@ -1,6 +1,5 @@
 import { Button, message, Space, Table, Tag, Tooltip } from "antd"
 import { Fragment, useEffect, useState } from "react"
-import toast from 'react-hot-toast';
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import categoriesApi from "../../../apis/categories"
 import ViewDrawerCategory from "../../../components/ViewDrawerCategory"
@@ -20,7 +19,7 @@ const ManageCategories = () => {
       setSelectedCategory(categories[selectedCatIndex])
       setIsOpenViewDrawer(true)
     } else {
-      toast.error("Có lỗi xảy ra")
+      message.error("Có lỗi xảy ra")
     }
   }
 
@@ -71,7 +70,8 @@ const ManageCategories = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      hidden: true
+      hidden: true,
+      defaultSortOrder: 'ascend'
     },
     {
       title: 'Tên danh mục',
@@ -141,7 +141,11 @@ const ManageCategories = () => {
         </Button>
       </div>
 
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        scroll={{ x: 'max-content' }}
+      />
 
       {isOpenViewDrawer && (
         <ViewDrawerCategory

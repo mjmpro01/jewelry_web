@@ -1,51 +1,102 @@
-import { Button, Space, Table, Tag } from "antd"
-import { Fragment, useEffect } from "react"
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import ordersApi from "../../../apis/orders"
+import { Button, message, Space, Table, Tag, Tooltip } from "antd"
+import { Fragment, useEffect, useState } from "react"
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
+import categoriesApi from "../../../apis/categories"
+import ViewDrawerCategory from "../../../components/ViewDrawerCategory"
+import CreateCategoryModal from "../../../components/CreateCategoryModal";
 
 const ManageOrders = () => {
+  const [categories, setCategories] = useState([])
+  const [dataSource, setDataSource] = useState([])
+  const [isOpenViewDrawer, setIsOpenViewDrawer] = useState(false);
+  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState();
+
+  const onOpenViewDrawer = (categoryRecord) => {
+    const selectedCatIndex = categories.findIndex(cat => Number(cat.id) === Number(categoryRecord.id))
+
+    if (selectedCatIndex !== -1) {
+      setSelectedCategory(categories[selectedCatIndex])
+      setIsOpenViewDrawer(true)
+    } else {
+      message.error("Có lỗi xảy ra")
+    }
+  }
+
+  const onDelete = async (categoryRecord) => {
+    await categoriesApi?.delete(categoryRecord?.id).then(async () => {
+      message.success("Xoá thành công");
+      await fetchData()
+    })
+  }
+
+  const onCloseViewDrawer = () => {
+    setIsOpenViewDrawer(false)
+  }
+
+  const onOpenCreateModal = () => {
+    setIsOpenCreateModal(true);
+  }
+
+  const fetchData = async () => {
+    const categories = await categoriesApi.getAll({ populate: 'deep,2' })
+      .then(res => {
+        setCategories(res?.data?.data || [])
+        return res?.data?.data
+      })
+      .then(data => data?.map((item, index) => ({
+        key: index + 1,
+        id: item?.id || -1,
+        name: item?.name || '',
+        description: item?.description || '',
+        slug: item?.slug || '',
+        productQuantity: item?.products?.length || 0
+      })));
+    setDataSource(categories)
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const orders = await ordersApi.getAll()
-        .then(res => res.data);
-      console.log("🚀 ~ file: index.jsx:12 ~ fetchData ~ orders:", orders)
-    }
-
     fetchData()
   }, [])
 
-
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-  ];
-
   const columns = [
     {
-      title: 'Name',
+      title: 'STT',
+      dataIndex: 'key',
+      key: 'key',
+      width: 80
+    },
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      hidden: true,
+      defaultSortOrder: 'ascend'
+    },
+    {
+      title: 'Tên danh mục',
       dataIndex: 'name',
       key: 'name',
+      width: 200,
+      ellipsis: true,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Mô tả',
+      dataIndex: 'description',
+      key: 'description',
+      width: 200,
+      ellipsis: true,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Slug',
+      dataIndex: 'slug',
+      key: 'slug',
+      ellipsis: true,
+    },
+    {
+      title: 'Số sản phẩm',
+      dataIndex: 'productQuantity',
+      key: 'productQuantity',
     },
     {
       title: 'Hành động',
@@ -54,15 +105,25 @@ const ManageOrders = () => {
       width: 200,
       render: (_, record) => (
         <Space size="small">
-          <Tag color="blue" className="cursor-pointer">
-            <EyeOutlined />
-          </Tag>
-          <Tag color="green" className="cursor-pointer">
-            <EditOutlined />
-          </Tag>
-          <Tag color="red" className="cursor-pointer">
-            <DeleteOutlined />
-          </Tag>
+          <Tooltip title="Xem">
+            <Tag
+              color="blue"
+              className="cursor-pointer"
+              onClick={() => onOpenViewDrawer(record)}
+            >
+              <EyeOutlined />
+            </Tag>
+          </Tooltip>
+
+          <Tooltip title="Xoá">
+            <Tag
+              color="red"
+              className="cursor-pointer"
+              onClick={() => onDelete(record)}
+            >
+              <DeleteOutlined />
+            </Tag>
+          </Tooltip>
         </Space>
       )
     }
@@ -71,12 +132,40 @@ const ManageOrders = () => {
   return (
     <Fragment>
       <div className="flex items-start justify-between mb-4">
-        <Button type="primary" className="p-[7px_15px] h-auto">
-          Thêm đơn hàng mới
+        <Button
+          type="primary"
+          className="p-[7px_15px] h-auto"
+          onClick={onOpenCreateModal}
+        >
+          Thêm danh mục mới
         </Button>
       </div>
 
-      <Table dataSource={dataSource} columns={columns} />;
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        scroll={{ x: 'max-content' }}
+      />
+
+      {isOpenViewDrawer && (
+        <ViewDrawerCategory
+          open={isOpenViewDrawer}
+          onClose={onCloseViewDrawer}
+          category={selectedCategory}
+          refetchData={fetchData}
+        />
+      )}
+
+      {isOpenCreateModal && (
+        <CreateCategoryModal
+          isModalOpen={isOpenCreateModal}
+          handleOk={() => {
+            setIsOpenCreateModal(false);
+            fetchData();
+          }}
+          handleCancle={() => setIsOpenCreateModal(false)}
+        />
+      )}
     </Fragment>
   )
 }

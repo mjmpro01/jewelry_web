@@ -81,7 +81,12 @@ const AdminLayout = () => {
             onClick={e => navigate(e.key)}
           />
         </Sider>
-        <Layout style={{ marginInlineStart: 200, height: '100vh' }}>
+        <Layout
+          style={{
+            marginInlineStart: collapsed ? 80 : 200,
+            height: '100vh',
+          }}
+        >
           <Header style={{ padding: 0, background: colorBgContainer }} />
           <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
             <div
