@@ -8,4 +8,8 @@ export class UpdateOrderDto extends PartialType(CreateOrderDto) {
   @ApiProperty()
   @IsString()
   status: string;
+
+  @ApiProperty()
+  @IsString()
+  userId: number;
 }
