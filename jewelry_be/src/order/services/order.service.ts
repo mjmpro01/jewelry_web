@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 
 import { ProductRepository } from '../../product/repositories/product.repository';
@@ -11,6 +12,7 @@ import { ProductService } from '../../product/services/product.service';
 import { Action } from '../../shared/acl/action.constant';
 import { Actor } from '../../shared/acl/actor.constant';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
+import { UserService } from '../../user/services/user.service';
 import { CreateOrderDto } from '../dtos/create-order.dto';
 import { UpdateOrderDto } from '../dtos/update-order.dto';
 import { Order } from '../entities/order.entity';
@@ -27,6 +29,7 @@ export class OrderService {
     private productService: ProductService,
     private readonly ProductRepository: ProductRepository,
     private aclService: OrderAclService,
+    private userService: UserService,
     
   ) {}
 
@@ -35,7 +38,6 @@ export class OrderService {
     ctx: RequestContext,
   ): Promise<Order> {
     const actor: Actor = ctx.user!;
-    console.log(actor);
     const isAllowed = this.aclService
       .forActor(actor)
       .canDoAction(Action.Create, Order)
@@ -89,13 +91,38 @@ export class OrderService {
     return order;
   }
 
-  async update(id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
+  async update(ctx: RequestContext, id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
+    const actor: Actor = ctx.user!;
+    console.log(actor);
+    const isAllowed = this.aclService
+      .forActor(actor)
+      .canDoAction(Action.Update, Order)
+    
+    if (!isAllowed) {
+      throw new UnauthorizedException();
+    }
     const order = await this.findOne(id);
+    if (updateOrderDto.userId) {
+      const user = await this.userService.findById(ctx, updateOrderDto.userId);
+      if (!user) {
+        throw new NotFoundException(`Người dùng với ID ${updateOrderDto.userId} không tìm thấy`);
+      }
+      order.user = user as unknown as User;
+    }
     Object.assign(order, updateOrderDto);
     return this.orderRepository.save(order);
   }
 
-  async remove(id: number): Promise<void> {
+
+  async remove(ctx: RequestContext, id: number): Promise<void> {
+    const actor: Actor = ctx.user!;
+    const isAllowed = this.aclService
+      .forActor(actor)
+      .canDoAction(Action.Update, Order)
+
+    if (!isAllowed) {
+      throw new UnauthorizedException();
+    }
     await this.orderItemRepository.delete({ order: { id: id } });
     const result = await this.orderRepository.delete(id);
     if (result.affected === 0) {
