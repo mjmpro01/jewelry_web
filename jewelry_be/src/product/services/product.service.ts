@@ -130,17 +130,8 @@ export class ProductService {
   ): Promise<ProductOutput> {
     this.logger.log(ctx, `${this.getProductBySlug.name} was called`);
 
-    const actor: Actor = ctx.user!;
-
     this.logger.log(ctx, `calling ${ProductRepository.name}.getBySlug`);
     const product = await this.repository.getBySlug(slug);
-
-    const isAllowed = this.aclService
-      .forActor(actor)
-      .canDoAction(Action.Read, product);
-    if (!isAllowed) {
-      throw new UnauthorizedException();
-    }
 
     return plainToClass(ProductOutput, product, {
       excludeExtraneousValues: true,

@@ -153,6 +153,30 @@ export class ProductController {
 
     return this.productService.deleteProduct(ctx, id);
   }
+
+
+  @Get('slug/:slug')
+  @ApiOperation({
+    summary: 'Get product by slug API',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: SwaggerBaseApiResponse(ProductOutput),
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    type: BaseApiErrorResponse,
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getProductBySlug(
+    @ReqContext() ctx: RequestContext,
+    @Param('slug') slug: string,
+  ): Promise<BaseApiResponse<ProductOutput>> {
+    this.logger.log(ctx, `${this.getProduct.name} was called`);
+
+    const product = await this.productService.getProductBySlug(ctx, slug);
+    return { data: product, meta: {} };
+  }
 }
 
 // This is not a React component, but we're using the React code block for TypeScript syntax highlighting
