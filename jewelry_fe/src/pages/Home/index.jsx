@@ -1,15 +1,16 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { images } from "../../assets/images"
 import HomeBannerSlider from "../../components/HomeBannerSlider"
 import ProductCard from "../../components/ProductCard"
 import productsApi from "../../apis/products"
 
 const Home = () => {
+  const [products, setProducts] = useState([])
+
   useEffect(() => {
     const fetchData = async () => {
-      const products = await productsApi.getAll()
-        .then(res => res.data);
-      console.log("🚀 ~ file: index.jsx:12 ~ fetchData ~ products:", products)
+      const products = await productsApi.getAll().then(res => res?.data?.data)
+      setProducts(products)
     }
 
     fetchData()
@@ -23,8 +24,8 @@ const Home = () => {
       </div>
 
       <div className="grid grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <ProductCard key={index} />
+        {products.slice(0, 8).map((product, index) => (
+          <ProductCard product={product} key={index} />
         ))}
       </div>
 
@@ -36,8 +37,8 @@ const Home = () => {
       />
 
       <div className="grid grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <ProductCard key={index} />
+        {products.slice(8, 16).map((product, index) => (
+          <ProductCard key={index} product={product} />
         ))}
       </div>
 

@@ -7,7 +7,7 @@ const CreateUserModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) => {
   const { handleSubmit, control, formState: { errors } } = useForm();
   const onSubmit = async (data) => {
     console.log("🚀 ~ file: index.jsx:10 ~ onSubmit ~ data:", data)
-    // const res = await usersApi.create(data)
+    // const res = await usersApi.create(data, true)
 
     // if (res.data) {
     //   message.success("Tạo thành công")

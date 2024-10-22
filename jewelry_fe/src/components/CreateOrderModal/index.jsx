@@ -34,7 +34,7 @@ const CreateOrderModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) => {
       userId: data?.userId,
     }
 
-    const res = await ordersApi.create(createData)
+    const res = await ordersApi.create(createData, true)
 
     if (res.data) {
       message.success("Tạo thành công")
@@ -46,8 +46,8 @@ const CreateOrderModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) => {
 
   useEffect(() => {
     const fetchOptions = async () => {
-      const productData = await productsApi.getAll().then(res => res?.data?.data)
-      const userData = await usersApi.getAll().then(res => res?.data?.data)
+      const productData = await productsApi.getAll({}, true).then(res => res?.data?.data)
+      const userData = await usersApi.getAll({}, true).then(res => res?.data?.data)
 
       const productOptions = productData?.map((product) => ({
         label: product.name,

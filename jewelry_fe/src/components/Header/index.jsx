@@ -13,8 +13,14 @@ const Header = () => {
     <>
       <header>
         <div className="flex items-center justify-between p-4">
-          <div className="logo text-2xl font-bold cursor-pointer" onClick={() => navigate(paths.HOME)}>
-            Jewelry
+          <div className='flex items-center gap-8'>
+            <p className="logo text-2xl font-bold cursor-pointer" onClick={() => navigate(paths.HOME)}>
+              Jewelry
+            </p>
+
+            <p className=" text-md font-semibold cursor-pointer" onClick={() => navigate(paths.PRODUCTS)}>
+              Danh sách sản phẩm
+            </p>
           </div>
           <div className="flex items-center gap-4">
             <div

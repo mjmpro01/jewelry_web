@@ -38,7 +38,7 @@ const ViewDrawerOrder = ({ open, onClose, order, refetchData, ...rest }) => {
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const orderData = await ordersApi.getById(order.id).then(res => res?.data)
+      const orderData = await ordersApi.getById(order.id, true).then(res => res?.data)
 
       setOrderData(orderData)
       form.setFieldsValue({
@@ -66,7 +66,7 @@ const ViewDrawerOrder = ({ open, onClose, order, refetchData, ...rest }) => {
 
   useEffect(() => {
     const fetchUserOptions = async () => {
-      const usersData = await usersApi.getAll().then(res => res?.data?.data);
+      const usersData = await usersApi.getAll({}, true).then(res => res?.data?.data);
 
       const userOptions = usersData.map(data => ({
         label: data?.name,
@@ -85,7 +85,7 @@ const ViewDrawerOrder = ({ open, onClose, order, refetchData, ...rest }) => {
       userId: values.userId,
       status: values.status,
       shippingAddress: values.shippingAddress
-    }).then(() => {
+    }, true).then(() => {
       setTimeout(async () => {
         setIsSubmitLoading(false);
         setIsEdit(false)

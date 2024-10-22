@@ -24,7 +24,7 @@ const ManageCategories = () => {
   }
 
   const onDelete = async (categoryRecord) => {
-    await categoriesApi?.delete(categoryRecord?.id).then(async () => {
+    await categoriesApi?.delete(categoryRecord?.id, true).then(async () => {
       message.success("Xoá thành công");
       await fetchData()
     })
@@ -39,7 +39,7 @@ const ManageCategories = () => {
   }
 
   const fetchData = async () => {
-    const categories = await categoriesApi.getAll({ populate: 'deep,2' })
+    const categories = await categoriesApi.getAll({ populate: 'deep,2' }, true)
       .then(res => {
         setCategories(res?.data?.data || [])
         return res?.data?.data

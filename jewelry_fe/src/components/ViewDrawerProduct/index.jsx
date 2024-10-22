@@ -18,7 +18,7 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
   useEffect(() => {
     const fetchProduct = async () => {
       const prodData = await productsApi
-        .getById(product.id)
+        .getById(product.id, true)
         .then(res => res.data.data)
 
       setProductData(prodData)
@@ -50,6 +50,8 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
       setValue('categoryId', prodData.categoryId)
       setValue('image', imageFileList)
       setValue('gallery', galleryFileList)
+      // setValue('image', prodData.image)
+      // setValue('gallery', prodData.gallery)
       setValue('slug', prodData.slug)
     }
 
@@ -60,7 +62,7 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
 
   useEffect(() => {
     const fetchCategoryOptions = async () => {
-      const categories = await categoriesApi.getAll().then(res => res?.data?.data);
+      const categories = await categoriesApi.getAll({}, true).then(res => res?.data?.data);
 
       const categoryOptions = categories.map(cat => ({
         label: cat?.name,
@@ -75,16 +77,21 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
 
   const onFinish = async (values) => {
     setIsSubmitLoading(true);
+    const galleryUrls = values.gallery.map(img => {
+      if (img?.url) return img.url;
+      return img
+    })
+
     await productsApi.update(productData?.id, {
       name: values.name,
       description: values.description,
       categoryId: values.categoryId,
-      price: values.price,
+      price: Number(values.price),
       slug: values.slug,
       stockQuantity: values.stockQuantity,
-      image: values.image[0],
-      gallery: values.gallery,
-    }).then(() => {
+      image: values.image[0].url,
+      gallery: galleryUrls,
+    }, true).then(() => {
       setTimeout(async () => {
         setIsSubmitLoading(false);
         setIsEdit(false)
@@ -178,6 +185,7 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
                 <InputNumber
                   {...field}
                   disabled={!isEdit}
+                  className="w-full"
                 />
                 <ErrorMessage
                   errors={errors}
@@ -199,6 +207,7 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
                 <InputNumber
                   {...field}
                   disabled={!isEdit}
+                  className="w-full"
                 />
                 <ErrorMessage
                   errors={errors}
@@ -220,6 +229,7 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
                 <InputNumber
                   {...field}
                   disabled={!isEdit}
+                  className="w-full"
                 />
                 <ErrorMessage
                   errors={errors}

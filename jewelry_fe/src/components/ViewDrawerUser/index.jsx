@@ -13,7 +13,7 @@ const ViewDrawerUser = ({ open, onClose, user, refetchData, ...rest }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userData = await usersApi.getById(user.id).then(res => res?.data?.data)
+      const userData = await usersApi.getById(user.id, true).then(res => res?.data?.data)
 
       setUserData(userData)
       form.setFieldsValue({
@@ -37,7 +37,7 @@ const ViewDrawerUser = ({ open, onClose, user, refetchData, ...rest }) => {
       email: values.email,
       password: values.password,
       roles: values.roles
-    }).then(() => {
+    }, true).then(() => {
       setTimeout(async () => {
         setIsSubmitLoading(false);
         setIsEdit(false)

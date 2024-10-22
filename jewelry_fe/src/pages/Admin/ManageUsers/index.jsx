@@ -24,7 +24,7 @@ const ManageUsers = () => {
   }
 
   const onDelete = async (categoryRecord) => {
-    await categoriesApi?.delete(categoryRecord?.id).then(async () => {
+    await categoriesApi?.delete(categoryRecord?.id, true).then(async () => {
       message.success("Xoá thành công");
       await fetchData()
     })

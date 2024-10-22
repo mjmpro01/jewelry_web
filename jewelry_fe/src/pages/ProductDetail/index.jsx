@@ -1,29 +1,48 @@
+import { useParams } from "react-router-dom"
 import ProductSlider from "../../components/ProductSlider"
 import { Button } from 'antd'
+import { useEffect, useState } from "react";
+import productsApi from "../../apis/products";
+import { formatCurrency } from "../../utils/formatText";
 
 const ProductDetail = () => {
+  const { slug } = useParams();
+  console.log("🚀 ~ file: index.jsx:7 ~ ProductDetail ~ slug:", slug)
+
+  const [product, setProduct] = useState();
+  console.log("🚀 ~ file: index.jsx:12 ~ ProductDetail ~ product:", product)
+
+  useEffect(() => {
+    const fetchProductDetail = async (slug) => {
+      const data = await productsApi.getBySlug(slug).then(res => res?.data?.data)
+
+      setProduct(data)
+    }
+
+    if (slug) {
+      fetchProductDetail(slug)
+    }
+  }, [slug])
+
   return (
     <div className="py-4">
-      <div className='flex items-start gap-4 relative'>
-        <ProductSlider />
+      <div className='flex md:flex-row flex-col items-start gap-4 relative'>
+        <ProductSlider product={product} />
 
-        <div className="flex flex-col gap-4 sticky top-4">
+        <div className="flex flex-col gap-4 sticky top-4 px-4 w-full">
           <p className="text-xl text-[#003468] font-bold">
-            Cặp nhẫn cưới Kim cương Vàng 18K PNJ Vàng Son
+            {product?.name}
           </p>
           <p className="text-xl text-[#003468]">
-            24.643.000 ₫
+            {formatCurrency(product?.price)}
           </p>
           <p className="text-base text-[#726f6f] italic">
             (Giá sản phẩm thay đổi tùy trọng lượng vàng và đá)
           </p>
           <p className="text-base text-[#726f6f]">
-            Vượt qua hành trình mài giũa dưới bàn tay của các nghệ nhân, kim cương gắn liền với biểu tượng của tình yêu thủy chung, son sắt. Với sắc vàng chuẩn mực 18K rực rỡ cùng vẻ đẹp lấp lánh và tinh khiết của kim cương, PNJ mang đến cặp nhẫn cưới hiện đại nhưng vẫn giữ được nét truyền thống vốn có.
+            {product?.description}
           </p>
-          <p className="text-base text-[#726f6f]">
-            Không chỉ có vai trò là vật đính ước thiêng liêng, nhẫn cưới kim cương còn thể hiện cá tính và phong cách của mỗi cặp đôi. Tại PNJ, các cặp đôi luôn có thể sở hữu những thiết kế nhẫn cưới kim cương vừa hợp lí về tài chính, vừa đẹp về mẫu mã.
-          </p>
-          <Button type="primary" danger>
+          <Button type="primary" danger className="w-full">
             Thêm vào giỏ hàng
           </Button>
         </div>

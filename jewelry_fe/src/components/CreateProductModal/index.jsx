@@ -22,7 +22,7 @@ const CreateProductModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) =>
 
   useEffect(() => {
     const fetchCategoryOptions = async () => {
-      const categories = await categoriesApi.getAll().then(res => res?.data?.data);
+      const categories = await categoriesApi.getAll({}, true).then(res => res?.data?.data);
 
       const categoryOptions = categories.map(cat => ({
         label: cat?.name,
@@ -36,7 +36,18 @@ const CreateProductModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) =>
   }, [])
 
   const onSubmit = async (data) => {
-    const res = await productsApi.create(data)
+    const galleryUrls = data.gallery.map(img => {
+      if (img?.url) return img.url;
+      return img
+    })
+
+    const dataSubmit = {
+      ...data,
+      image: data.image.url,
+      gallery: galleryUrls
+    }
+
+    const res = await productsApi.create(dataSubmit, true)
 
     if (res.data) {
       message.success("Tạo thành công")

@@ -7,6 +7,7 @@ const UploadImages = (props) => {
   const { defaultFileList, onUploadComplete, fieldKey, maxCount, disabled, ...rest } = props;
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
+  console.log("🚀 ~ file: index.jsx:10 ~ UploadImages ~ fileList:", fileList)
 
   useEffect(() => {
     if (defaultFileList) {
@@ -15,12 +16,13 @@ const UploadImages = (props) => {
   }, [defaultFileList]);
 
   const handleChange = (info) => {
+    console.log("🚀 ~ file: index.jsx:18 ~ handleChange ~ info:", info)
     let updatedFileList = [...info.fileList];
 
     if (info.file.status === 'uploading') {
       setLoading(true);
-    }
-    if (info.file.status === 'done') {
+      setFileList(updatedFileList);
+    } else if (info.file.status === 'done') {
       setLoading(false);
       const fileUrl = info.file.response?.url; // Extract the file URL from the API response
       // Get this url from response in real world.
@@ -29,24 +31,34 @@ const UploadImages = (props) => {
           if (file.uid === info.file.uid) {
             return {
               ...file,
-              url: fileUrl
+              status: 'done',
+              url: fileUrl || file.url || URL.createObjectURL(file.originFileObj)
             }
           }
           return file
 
         })
       }
+
+      setFileList(updatedFileList);
+
+      const imageUrls = updatedFileList.map(file => file.url || URL.createObjectURL(file.originFileObj));
+      onUploadComplete?.(imageUrls);
     } else if (info.file.status === 'removed') {
       updatedFileList = updatedFileList.filter(file => file.uid !== info.file.uid); // Remove the deleted image URL
       onUploadComplete?.(updatedFileList.map(file => file.url)); // Pass updated array to parent
       setFileList(updatedFileList);
       return;
     }
+  };
 
+  const handleSuccess = (response, file) => {
+    console.log("🚀 ~ file: index.jsx:54 ~ handleSuccess ~ response:", response)
+    // Update the fileList when upload is successful
+    const updatedFileList = fileList.map(f => (f.uid === file.uid ? { ...f, url: response.url, status: 'done' } : f))
     setFileList(updatedFileList);
-
-    const imageUrls = updatedFileList.map(file => file.url || file.thumbUrl);
-    onUploadComplete?.(imageUrls);
+    onUploadComplete?.(updatedFileList); // Pass updated array to parent
+    setLoading(false);
   };
 
   const uploadButton = (
@@ -77,6 +89,10 @@ const UploadImages = (props) => {
         fileList={fileList}
         action={`${urls.BASE_URL}/api/v1/${urls.UPLOAD}`}
         onChange={handleChange}
+        onSuccess={handleSuccess}
+        onError={(error) => {
+          console.error("Upload error:", error);
+        }}
         {...rest}
       >
         {!disabled && fileList?.length < (maxCount || Infinity) && uploadButton}

@@ -11,7 +11,7 @@ const CreateCategoryModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) =
     }
   });
   const onSubmit = async (data) => {
-    const res = await categoriesApi.create(data)
+    const res = await categoriesApi.create(data, true)
 
     if (res.data) {
       message.success("Tạo thành công")

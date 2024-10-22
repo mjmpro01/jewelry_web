@@ -14,6 +14,7 @@ import ManageCategories from '../pages/Admin/ManageCategories';
 import ManageOrders from '../pages/Admin/ManageOrders';
 import LoginAdmin from '../pages/Admin/Login';
 import ManageUsers from '../pages/Admin/ManageUsers';
+import Products from '../pages/Products';
 
 const router = createBrowserRouter([
   // {
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: paths.PRODUCTS,
-        element: <Home />,
+        element: <Products />,
       },
       {
         path: `${paths.PRODUCTS}/:slug`,

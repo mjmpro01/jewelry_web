@@ -12,7 +12,7 @@ const ViewDrawerCategory = ({ open, onClose, category, refetchData, ...rest }) =
 
   useEffect(() => {
     const fetchCategory = async () => {
-      const catData = await categoriesApi.getById(category.id).then(res => res?.data?.data)
+      const catData = await categoriesApi.getById(category.id, true).then(res => res?.data?.data)
 
       setCategoryData(catData)
       form.setFieldsValue({
@@ -32,20 +32,20 @@ const ViewDrawerCategory = ({ open, onClose, category, refetchData, ...rest }) =
     await categoriesApi.update(categoryData?.id, {
       name: values.name,
       description: values.description,
+    }, true).then(() => {
+      setTimeout(async () => {
+        setIsSubmitLoading(false);
+        setIsEdit(false)
+        await refetchData();
+        message.success("Sửa thành công")
+        onClose();
+        return;
+      }, 1500)
     }).catch(e => {
       console.log(e);
       setIsSubmitLoading(false);
       return;
     })
-
-    setTimeout(async () => {
-      setIsSubmitLoading(false);
-      setIsEdit(false)
-      await refetchData();
-      message.success("Sửa thành công")
-      onClose();
-      return;
-    }, 1500)
   }
 
   return (

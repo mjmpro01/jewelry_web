@@ -28,7 +28,7 @@ const ManageOrders = () => {
   }
 
   const onDelete = async (orderRecord) => {
-    await ordersApi?.delete(orderRecord?.id).then(async () => {
+    await ordersApi?.delete(orderRecord?.id, true).then(async () => {
       message.success("Xoá thành công");
       await fetchData()
     })
@@ -43,7 +43,7 @@ const ManageOrders = () => {
   // }
 
   const fetchData = async () => {
-    const orders = await ordersApi.getAll({ populate: 'deep,2' })
+    const orders = await ordersApi.getAll({ populate: 'deep,2' }, true)
       .then(res => {
         setOrders(res?.data || [])
         return res?.data

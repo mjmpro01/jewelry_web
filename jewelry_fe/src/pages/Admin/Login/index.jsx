@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const LoginAdmin = () => {
   const navigate = useNavigate();
 
-  const accessToken = localStorage.getItem(variables.ACCESS_TOKEN);
+  const accessToken = localStorage.getItem(variables.ADMIN_ACCESS_TOKEN);
 
   useEffect(() => {
     if (accessToken) {
@@ -21,8 +21,8 @@ const LoginAdmin = () => {
       res => res?.data?.data
     ).then(
       data => {
-        localStorage?.setItem(variables.ACCESS_TOKEN, data.accessToken)
-        localStorage?.setItem(variables.REFRESH_TOKEN, data.refreshToken)
+        localStorage?.setItem(variables.ADMIN_ACCESS_TOKEN, data.accessToken)
+        localStorage?.setItem(variables.ADMIN_REFRESH_TOKEN, data.refreshToken)
         message.success("Đăng nhập thành công")
         setTimeout(() => {
           navigate(`${paths.ADMIN}${paths.DASHBOARD}`)
@@ -62,7 +62,7 @@ const LoginAdmin = () => {
         name={'password'}
         rules={[{ required: true }]}
       >
-        <Input />
+        <Input type="password" />
       </Form.Item>
 
       <Form.Item

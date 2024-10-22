@@ -31,7 +31,7 @@ const ManageProducts = () => {
   }
 
   const onDelete = async (productRecord) => {
-    await productsApi?.delete(productRecord?.id).then(async () => {
+    await productsApi?.delete(productRecord?.id, true).then(async () => {
       message.success("Xoá thành công");
       await fetchData()
     })
@@ -42,14 +42,14 @@ const ManageProducts = () => {
   }
 
   const fetchData = async () => {
-    const products = await productsApi.getAll({ populate: 'deep,2', sort: 'createdAt:desc' })
+    const products = await productsApi.getAll({ populate: 'deep,2', sort: 'createdAt:desc' }, true)
       .then(res => {
         setProducts(res?.data?.data || [])
         return res?.data?.data
       })
 
     const dataSource = await Promise.all(products?.map(async (item, index) => {
-      const category = await categoriesApi.getById(item?.categoryId).then(res => res?.data?.data)
+      const category = await categoriesApi.getById(item?.categoryId, true).then(res => res?.data?.data)
 
       return {
         key: index + 1,
