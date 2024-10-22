@@ -63,7 +63,7 @@ export class ProductService {
   async getProducts(
     ctx: RequestContext,
     query: GetProductQueryDto,
-  ): Promise<{ products: ProductOutput[]; count: number }> {
+  ): Promise<{ products: ProductOutput[]; pagination: any }> {
     this.logger.log(ctx, `${this.getProducts.name} was called`);
 
     this.logger.log(ctx, `calling ${ProductRepository.name}.findAndCount`);
@@ -92,13 +92,30 @@ export class ProductService {
       // Default sorting if none provided
       queryBuilder.orderBy('product.createdAt', 'DESC');
     }
-    const [products, count] = await queryBuilder.getManyAndCount();
+
+    const page = query.page || 1;
+    const pageSize = query.pageSize || 10;
+    const skip = (page - 1) * pageSize;
+
+    queryBuilder.skip(skip).take(pageSize);
+
+    const [products, total] = await queryBuilder.getManyAndCount();
 
     const productsOutput = plainToClass(ProductOutput, products, {
       excludeExtraneousValues: true,
     });
 
-    return { products: productsOutput, count };
+    const pageCount = Math.ceil(total / pageSize);
+
+    return {
+      products: productsOutput,
+      pagination: {
+        page,
+        pageSize,
+        pageCount,
+        total,
+      },
+    };
   }
 
   async getProductById(
@@ -201,7 +218,6 @@ export class ProductService {
     await this.repository.remove(product);
   }
 
-
   private async generateUniqueSKU(): Promise<string> {
     let sku: string = '';
     let isUnique = false;
@@ -225,9 +241,8 @@ export class ProductService {
 
   private generateRandomLetters(length: number): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+    return Array.from({ length }, () =>
+      characters.charAt(Math.floor(Math.random() * characters.length)),
+    ).join('');
   }
-
 }
-
-

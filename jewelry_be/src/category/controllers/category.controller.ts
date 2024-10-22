@@ -80,12 +80,12 @@ export class CategoryController {
   ): Promise<BaseApiResponse<CategoryOutput[]>> {
     this.logger.log(ctx, `${this.getCategories.name} was called`);
 
-    const { categories, count } = await this.categoryService.getCategories(
+    const { categories, pagination } = await this.categoryService.getCategories(
       ctx,
       query,
     );
 
-    return { data: categories, meta: { count } };
+    return { data: categories, meta: { pagination } };
   }
 
   @Get(':id')

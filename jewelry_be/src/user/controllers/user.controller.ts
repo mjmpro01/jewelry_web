@@ -89,13 +89,14 @@ export class UserController {
     @Query() query: PaginationParamsDto,
   ): Promise<BaseApiResponse<UserOutput[]>> {
     this.logger.log(ctx, `${this.getUsers.name} was called`);
-
+    const page = query.page || 1;
+    const pageSize = query.pageSize || 10;
     const { users, count } = await this.userService.getUsers(
       ctx,
-      query.limit,
-      query.offset,
+      pageSize,
+      page - 1,
     );
-
+    
     return { data: users, meta: { count } };
   }
 

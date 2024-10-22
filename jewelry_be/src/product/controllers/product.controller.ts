@@ -80,12 +80,12 @@ export class ProductController {
   ): Promise<BaseApiResponse<ProductOutput[]>> {
     this.logger.log(ctx, `${this.getProducts.name} was called`);
 
-    const { products, count } = await this.productService.getProducts(
+    const { products, pagination } = await this.productService.getProducts(
       ctx,
       query
     );
 
-    return { data: products, meta: { count } };
+    return { data: products, meta: { pagination } };
   }
 
   @Get(':id')
