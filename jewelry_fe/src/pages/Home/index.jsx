@@ -32,7 +32,7 @@ const Home = () => {
         src={images.homeBanner4}
         width={1500}
         height={500}
-        className="w-full h-auto aspect-[3/1] object-cover rounded-2xl"
+        className="w-full h-auto aspect-[3/1] object-cover rounded-2xl mb-4"
       />
 
       <div className="grid grid-cols-4 gap-4">

@@ -1,4 +1,4 @@
-import { Button, message, Space, Table, Tag, Tooltip } from "antd"
+import { Avatar, Button, message, Space, Table, Tag, Tooltip } from "antd"
 import { Fragment, useEffect, useState } from "react"
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import productsApi from "../../../apis/products"
@@ -54,6 +54,7 @@ const ManageProducts = () => {
       return {
         key: index + 1,
         id: item?.id || -1,
+        image: item?.image,
         gallery: item?.gallery,
         name: item?.name || '',
         price: item?.price || '',
@@ -88,18 +89,40 @@ const ManageProducts = () => {
       hidden: true,
     },
     {
-      title: 'Ảnh',
-      dataIndex: 'gallery',
-      key: 'gallery',
-      hidden: true
-    },
-    {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
       width: 200,
       ellipsis: true,
       fixed: 'left',
+    },
+    {
+      title: 'Ảnh',
+      dataIndex: 'image',
+      key: 'image',
+      render: (image => {
+        return (
+          <a href={image} target="_blank">
+            <Avatar src={image} />
+          </a>
+        )
+      })
+    },
+    {
+      title: 'Bộ sưu tập',
+      dataIndex: 'gallery',
+      key: 'gallery',
+      render: (gallery => {
+        return (
+          <Avatar.Group>
+            {gallery.map((item, index) => (
+              <a href={item} key={index} target="_blank">
+                <Avatar src={item} />
+              </a>
+            ))}
+          </Avatar.Group>
+        )
+      })
     },
     {
       title: 'Giá',

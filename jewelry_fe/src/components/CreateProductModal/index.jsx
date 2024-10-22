@@ -146,9 +146,6 @@ const CreateProductModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) =>
               <Form.Item label="Danh mục">
                 <Select
                   name="categoryId"
-                  // onChange={(value) => {
-                  //   console.log(`selected ${value}`)
-                  // }}
                   options={categoryOptions}
                   {...field}
                 />

@@ -13,6 +13,7 @@ import ManageProducts from '../pages/Admin/ManageProducts';
 import ManageCategories from '../pages/Admin/ManageCategories';
 import ManageOrders from '../pages/Admin/ManageOrders';
 import LoginAdmin from '../pages/Admin/Login';
+import ManageUsers from '../pages/Admin/ManageUsers';
 
 const router = createBrowserRouter([
   // {
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
       {
         path: `${paths.ADMIN}${paths.MANAGE_ORDERS}`,
         element: <ManageOrders />,
+      },
+      {
+        path: `${paths.ADMIN}${paths.MANAGE_USERS}`,
+        element: <ManageUsers />,
       }
     ]
   },

@@ -74,7 +74,6 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
   }, [])
 
   const onFinish = async (values) => {
-    console.log("🚀 ~ file: index.jsx:59 ~ onFinish ~ values:", values)
     setIsSubmitLoading(true);
     await productsApi.update(productData?.id, {
       name: values.name,

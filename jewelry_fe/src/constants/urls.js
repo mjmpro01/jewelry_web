@@ -7,7 +7,8 @@ const urls = {
   ORDERS: 'orders',
   UPLOAD: 'upload',
   LOGIN: 'auth/login',
-  REFRESH_TOKEN: 'auth/refresh-token'
+  REFRESH_TOKEN: 'auth/refresh-token',
+  USERS: 'users'
 }
 
 export default urls

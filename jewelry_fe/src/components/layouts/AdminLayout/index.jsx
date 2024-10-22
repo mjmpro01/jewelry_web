@@ -7,6 +7,7 @@ import {
   DollarOutlined,
   ProductOutlined,
   ProfileOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { paths } from '../../../constants/paths';
 import { useState } from 'react';
@@ -45,6 +46,11 @@ const menuItems = [
     key: `${paths.ADMIN}${paths.MANAGE_ORDERS}`,
     icon: <DollarOutlined />,
     label: 'Quản lý đơn hàng'
+  },
+  {
+    key: `${paths.ADMIN}${paths.MANAGE_USERS}`,
+    icon: <UserOutlined />,
+    label: 'Quản lý User'
   },
 ]
 

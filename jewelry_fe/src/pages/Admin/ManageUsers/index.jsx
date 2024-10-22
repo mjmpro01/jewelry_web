@@ -1,34 +1,30 @@
 import { message, Space, Table, Tag, Tooltip } from "antd"
 import { Fragment, useEffect, useState } from "react"
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
-import dayjs from 'dayjs'
+import categoriesApi from "../../../apis/categories"
+import usersApi from "../../../apis/users"
+import ViewDrawerUser from "../../../components/ViewDrawerUser"
 
-import ordersApi from "../../../apis/orders"
-import { formatCurrency } from "../../../utils/formatText"
-import ViewDrawerOrder from "../../../components/ViewDrawerOrder"
-import { translatedOrderStatus } from "../../../constants/orderStatus"
-// import CreateOrderModal from "../../../components/CreateOrderModal"
-
-const ManageOrders = () => {
-  const [orders, setOrders] = useState([])
+const ManageUsers = () => {
+  const [users, setUsers] = useState([])
   const [dataSource, setDataSource] = useState([])
   const [isOpenViewDrawer, setIsOpenViewDrawer] = useState(false);
   // const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState();
+  const [selectedUser, setSelectedUser] = useState();
 
-  const onOpenViewDrawer = (orderRecord) => {
-    const selectedOrderIndex = orders.findIndex(order => Number(order.id) === Number(orderRecord.id))
+  const onOpenViewDrawer = (userRecord) => {
+    const selectedUserIndex = users.findIndex(user => Number(user.id) === Number(userRecord.id))
 
-    if (selectedOrderIndex !== -1) {
-      setSelectedOrder(orders[selectedOrderIndex])
+    if (selectedUserIndex !== -1) {
+      setSelectedUser(users[selectedUserIndex])
       setIsOpenViewDrawer(true)
     } else {
       message.error("Có lỗi xảy ra")
     }
   }
 
-  const onDelete = async (orderRecord) => {
-    await ordersApi?.delete(orderRecord?.id).then(async () => {
+  const onDelete = async (categoryRecord) => {
+    await categoriesApi?.delete(categoryRecord?.id).then(async () => {
       message.success("Xoá thành công");
       await fetchData()
     })
@@ -43,26 +39,20 @@ const ManageOrders = () => {
   // }
 
   const fetchData = async () => {
-    const orders = await ordersApi.getAll({ populate: 'deep,2' })
+    const users = await usersApi.getAll({ populate: 'deep,2' })
       .then(res => {
-        setOrders(res?.data || [])
-        return res?.data
+        setUsers(res?.data?.data || [])
+        return res?.data?.data
       })
-
-    const dataSource = orders.map((order, index) => {
-      return {
+      .then(data => data?.map((item, index) => ({
         key: index + 1,
-        id: order?.id || -1,
-        userName: order?.user?.name || '',
-        orderItems: order?.orderItems?.length || '',
-        status: translatedOrderStatus[order?.status] || '',
-        totalAmount: formatCurrency(order?.totalAmount) || '',
-        shippingAddress: order?.shippingAddress || '',
-        paymentMethod: order?.paymentMethod || 0,
-        createdAt: dayjs(order?.createdAt).format('DD/MM/YYYY')
-      }
-    })
-    setDataSource(dataSource)
+        id: item?.id || -1,
+        name: item?.name || '',
+        username: item?.username || '',
+        email: item?.email || '',
+        roles: item?.roles || []
+      })));
+    setDataSource(users)
   }
 
   useEffect(() => {
@@ -74,8 +64,7 @@ const ManageOrders = () => {
       title: 'STT',
       dataIndex: 'key',
       key: 'key',
-      width: 80,
-      fixed: 'left',
+      width: 80
     },
     {
       title: 'ID',
@@ -85,53 +74,41 @@ const ManageOrders = () => {
       defaultSortOrder: 'ascend'
     },
     {
-      title: 'Người mua',
-      dataIndex: 'userName',
-      key: 'userName',
-      width: 200,
-      ellipsis: true,
-      fixed: 'left',
-    },
-    {
-      title: 'Số sản phẩm',
-      dataIndex: 'orderItems',
-      key: 'orderItems',
+      title: 'Tên user',
+      dataIndex: 'name',
+      key: 'name',
       width: 200,
       ellipsis: true,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
-      ellipsis: true,
-    },
-    {
-      title: 'Tổng cộng',
-      dataIndex: 'totalAmount',
-      key: 'totalAmount',
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
       width: 200,
       ellipsis: true,
     },
     {
-      title: 'Địa chỉ nhận hàng',
-      dataIndex: 'shippingAddress',
-      key: 'shippingAddress',
-      width: 200,
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
       ellipsis: true,
     },
     {
-      title: 'Phương thức thanh toán',
-      dataIndex: 'paymentMethod',
-      key: 'paymentMethod',
-      width: 200,
-      ellipsis: true,
-    },
-    {
-      title: 'Ngày tạo',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      width: 200,
-      ellipsis: true,
+      title: 'Roles',
+      dataIndex: 'roles',
+      key: 'roles',
+      render: (_, { roles }) => (
+        <>
+          {roles.map((role) => {
+            let color = role === 'ADMIN' ? 'geekblue' : 'green';
+            return (
+              <Tag color={color} key={role}>
+                {role.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
     {
       title: 'Hành động',
@@ -172,7 +149,7 @@ const ManageOrders = () => {
           className="p-[7px_15px] h-auto"
           onClick={onOpenCreateModal}
         >
-          Thêm đơn hàng mới
+          Thêm User mới
         </Button>
       </div> */}
 
@@ -183,16 +160,16 @@ const ManageOrders = () => {
       />
 
       {isOpenViewDrawer && (
-        <ViewDrawerOrder
+        <ViewDrawerUser
           open={isOpenViewDrawer}
           onClose={onCloseViewDrawer}
-          order={selectedOrder}
+          user={selectedUser}
           refetchData={fetchData}
         />
       )}
 
       {/* {isOpenCreateModal && (
-        <CreateOrderModal
+        <CreateUserModal
           isModalOpen={isOpenCreateModal}
           handleOk={() => {
             setIsOpenCreateModal(false);
@@ -205,4 +182,4 @@ const ManageOrders = () => {
   )
 }
 
-export default ManageOrders
+export default ManageUsers

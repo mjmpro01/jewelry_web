@@ -7,7 +7,6 @@ const UploadImages = (props) => {
   const { defaultFileList, onUploadComplete, fieldKey, maxCount, disabled, ...rest } = props;
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
-  console.log("🚀 ~ file: index.jsx:9 ~ UploadImages ~ fileList:", fileList)
 
   useEffect(() => {
     if (defaultFileList) {

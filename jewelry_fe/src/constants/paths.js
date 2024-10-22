@@ -9,4 +9,5 @@ export const paths = {
   MANAGE_PRODUCTS: '/quan-ly-san-pham',
   MANAGE_CATEGORIES: '/quan-ly-danh-muc',
   MANAGE_ORDERS: '/quan-ly-don-hang',
+  MANAGE_USERS: '/quan-ly-user',
 }
