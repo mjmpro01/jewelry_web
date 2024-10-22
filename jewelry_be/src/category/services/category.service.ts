@@ -5,7 +5,7 @@ import { Action } from '../../shared/acl/action.constant';
 import { Actor } from '../../shared/acl/actor.constant';
 import { AppLogger } from '../../shared/logger/logger.service';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
-import { slugify } from '../../shared/utils/slugify';
+import { handleSlug } from '../../shared/utils/slugify';
 import {
   CreateCategoryInput,
   UpdateCategoryInput,
@@ -33,7 +33,7 @@ export class CategoryService {
     this.logger.log(ctx, `${this.createCategory.name} was called`);
 
     const category = plainToClass(Category, input);
-    category.slug = slugify(input.name);
+    category.slug = handleSlug(input.name);
 
     const actor: Actor = ctx.user!;
 
@@ -122,7 +122,7 @@ export class CategoryService {
     };
 
     if (input.name) {
-      updatedCategory.slug = slugify(input.name);
+      updatedCategory.slug = handleSlug(input.name);
     }
 
     this.logger.log(ctx, `calling ${CategoryRepository.name}.save`);

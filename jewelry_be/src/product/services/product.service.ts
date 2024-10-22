@@ -6,7 +6,7 @@ import { Action } from '../../shared/acl/action.constant';
 import { Actor } from '../../shared/acl/actor.constant';
 import { AppLogger } from '../../shared/logger/logger.service';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
-import { slugify } from '../../shared/utils/slugify';
+import { handleSlug } from '../../shared/utils/slugify';
 import {
   CreateProductInput,
   UpdateProductInput,
@@ -49,7 +49,7 @@ export class ProductService {
     );
 
     const product = plainToClass(Product, input);
-    product.slug = slugify(input.name);
+    product.slug = handleSlug(input.name);
     product.category = category;
     product.sku = await this.generateUniqueSKU();
     this.logger.log(ctx, `calling ${ProductRepository.name}.save`);
@@ -172,7 +172,7 @@ export class ProductService {
     };
 
     if (input.name) {
-      updatedProduct.slug = slugify(input.name);
+      updatedProduct.slug = handleSlug(input.name);
     }
 
     if (input.categoryId) {
