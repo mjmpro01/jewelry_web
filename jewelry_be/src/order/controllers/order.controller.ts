@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -65,7 +66,11 @@ export class OrderController {
   })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: number, @Body() updateOrderDto: UpdateOrderDto, @ReqContext() ctx: RequestContext) {
+  update(
+    @Param('id') id: number,
+    @Body() updateOrderDto: UpdateOrderDto,
+    @ReqContext() ctx: RequestContext,
+  ) {
     return this.orderService.update(ctx, +id, updateOrderDto);
   }
 
@@ -80,5 +85,20 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   remove(@ReqContext() ctx: RequestContext, @Param('id') id: number) {
     return this.orderService.remove(ctx, +id);
+  }
+
+  @Get('orders/me')
+  @ApiOperation({
+    summary: 'Get orders for the authenticated user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The order has been successfully get order by me.',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async getMyOrders(@ReqContext() ctx: RequestContext) {
+    const orders = await this.orderService.getOrdersByUser(ctx);
+    return { data: orders, meta: {} };
   }
 }

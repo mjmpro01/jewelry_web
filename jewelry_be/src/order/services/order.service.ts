@@ -129,4 +129,19 @@ export class OrderService {
       throw new NotFoundException(`Order with ID ${id} not found`);
     }
   }
+
+  async getOrdersByUser(ctx: RequestContext): Promise<Order[]> {
+    const actor: Actor = ctx.user!;
+    const isAllowed = this.aclService
+      .forActor(actor)
+      .canDoAction(Action.Read, Order)
+    
+    if (!isAllowed) {
+      throw new UnauthorizedException();
+    }
+    return this.orderRepository.find({
+      where: { user: { id: actor.id } },
+      relations: ['orderItems', 'orderItems.product', 'user'],
+    });
+  }
 }

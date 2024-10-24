@@ -177,6 +177,7 @@ export class ProductController {
     const product = await this.productService.getProductBySlug(ctx, slug);
     return { data: product, meta: {} };
   }
+
 }
 
 // This is not a React component, but we're using the React code block for TypeScript syntax highlighting
