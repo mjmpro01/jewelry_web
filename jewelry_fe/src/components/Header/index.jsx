@@ -1,13 +1,28 @@
 import { UserIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../constants/paths';
-import { useState } from 'react';
 import CartDrawer from '../CartDrawer';
+import { useCartStore } from '../../store/cart';
+import { Badge } from 'antd';
+import { isUserLoggedIn } from '../../utils/auth';
+import { useCartDrawerStore } from '../../store/cartDrawer';
 
 const Header = () => {
   const navigate = useNavigate();
 
-  const [openCartDrawer, setOpenCartDrawer] = useState(false);
+  const isOpenCartDrawer = useCartDrawerStore(s => s.isOpenCartDrawer);
+  const setIsOpenCartDrawer = useCartDrawerStore(s => s.setIsOpenCartDrawer);
+  const cart = useCartStore(s => s.cart)
+
+  const handleOnClickUser = () => {
+    if (isUserLoggedIn()) {
+      navigate(`${paths.PROFILE}${paths.INFO}`)
+      return
+    }
+
+    navigate(paths.LOGIN)
+    return;
+  }
 
   return (
     <>
@@ -23,16 +38,18 @@ const Header = () => {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <div
-              className="p-2 bg-slate-500 rounded-full flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
-              onClick={() => setOpenCartDrawer(true)}
-            >
-              <ShoppingBagIcon className='size-4 text-white' />
-            </div>
+            <Badge color='blue' count={cart?.length}>
+              <div
+                className="p-2 bg-slate-500 rounded-full flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
+                onClick={() => setIsOpenCartDrawer(true)}
+              >
+                <ShoppingBagIcon className='size-4 text-white' />
+              </div>
+            </Badge>
 
             <div
               className="p-2 bg-slate-500 rounded-full flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
-              onClick={() => navigate(paths.LOGIN)}
+              onClick={handleOnClickUser}
             >
               <UserIcon className='size-4 text-white' />
             </div>
@@ -41,8 +58,8 @@ const Header = () => {
       </header>
 
       <CartDrawer
-        open={openCartDrawer}
-        onClose={() => setOpenCartDrawer(false)}
+        open={isOpenCartDrawer}
+        onClose={() => setIsOpenCartDrawer(false)}
       />
     </>
   )

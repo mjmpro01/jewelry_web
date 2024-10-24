@@ -1,7 +1,6 @@
 import { message, Space, Table, Tag, Tooltip } from "antd"
 import { Fragment, useEffect, useState } from "react"
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
-import categoriesApi from "../../../apis/categories"
 import usersApi from "../../../apis/users"
 import ViewDrawerUser from "../../../components/ViewDrawerUser"
 
@@ -23,8 +22,8 @@ const ManageUsers = () => {
     }
   }
 
-  const onDelete = async (categoryRecord) => {
-    await categoriesApi?.delete(categoryRecord?.id, true).then(async () => {
+  const onDelete = async (userRecord) => {
+    await usersApi?.delete(userRecord?.id, true).then(async () => {
       message.success("Xoá thành công");
       await fetchData()
     })
@@ -39,7 +38,7 @@ const ManageUsers = () => {
   // }
 
   const fetchData = async () => {
-    const users = await usersApi.getAll({ populate: 'deep,2' })
+    const users = await usersApi.getAll({ populate: 'deep,2' }, true)
       .then(res => {
         setUsers(res?.data?.data || [])
         return res?.data?.data

@@ -3,7 +3,8 @@ import { paths } from "../../constants/paths"
 import { formatCurrency } from "../../utils/formatText"
 
 const ProductCard = ({ product }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   return (
     <div
       className="flex flex-col gap-4 cursor-pointer"

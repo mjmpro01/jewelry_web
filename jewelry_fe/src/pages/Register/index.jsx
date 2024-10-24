@@ -1,9 +1,20 @@
-import { Button, Input } from "antd"
 import { useNavigate } from "react-router-dom"
+import { Button, Input, message } from "antd"
 import { paths } from "../../constants/paths";
+import { Controller, useForm } from "react-hook-form";
+import authApi from "../../apis/auth";
 
 const Register = () => {
   const navigate = useNavigate();
+
+  const { handleSubmit, control } = useForm();
+
+  const onSubmit = async (values) => {
+    await authApi.register(values)
+
+    message.success("Đăng ký thành công")
+    navigate(paths.LOGIN)
+  }
 
   return (
     <div className="flex flex-col w-[300px]">
@@ -13,30 +24,85 @@ const Register = () => {
       >
         JEWELRY
       </h3>
-      <div className="flex flex-col gap-2 mb-4">
-        <p className="text-base font-semibold">
-          Email
-        </p>
-        <Input />
-      </div>
+      <form
+        className="flex flex-col"
+        onSubmit={handleSubmit(onSubmit)}
+      >
 
-      <div className="flex flex-col gap-2 mb-4">
-        <p className="text-base font-semibold">
-          Mật khẩu
-        </p>
-        <Input />
-      </div>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col gap-2 mb-4">
+              <p className="text-base font-semibold">
+                Tên người dùng
+              </p>
+              <Input
+                required
+                {...field}
+              />
+            </div>
+          )}
+        />
 
-      <div className="flex flex-col gap-2 mb-8">
-        <p className="text-base font-semibold">
-          Nhập lại mật khẩu
-        </p>
-        <Input />
-      </div>
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col gap-2 mb-4">
+              <p className="text-base font-semibold">
+                Username
+              </p>
+              <Input
+                required
+                {...field}
+              />
+            </div>
+          )}
+        />
 
-      <Button type="primary" className="p-2 h-auto mb-4">
-        Đăng ký
-      </Button>
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col gap-2 mb-4">
+              <p className="text-base font-semibold">
+                Email
+              </p>
+              <Input
+                required
+                {...field}
+              />
+            </div>
+          )}
+        />
+
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col gap-2 mb-4">
+              <p className="text-base font-semibold">
+                Mật khẩu
+              </p>
+              <Input
+                required
+                type="password"
+                {...field}
+              />
+            </div>
+          )}
+        />
+
+        <Button
+          type="primary"
+          className="p-2 h-auto mb-4"
+          htmlType="submit"
+        >
+          Đăng ký
+        </Button>
+      </form>
+
       <p className="text-sm text-center">
         Bạn đã có tài khoản?{" "}
         <span

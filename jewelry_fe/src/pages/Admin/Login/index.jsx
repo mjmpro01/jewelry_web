@@ -65,20 +65,14 @@ const LoginAdmin = () => {
         <Input type="password" />
       </Form.Item>
 
-      <Form.Item
-        wrapperCol={{
-          span: 8,
-          offset: 8,
-        }}
+      <Button
+        type="primary"
+        className="p-2 h-auto mb-4"
+        htmlType="submit"
       >
-        <Button
-          type="primary"
-          className="p-2 h-auto"
-          htmlType="submit"
-        >
-          Đăng nhập
-        </Button>
-      </Form.Item>
+        Đăng nhập
+      </Button>
+
       <p className="text-sm text-center">
         Bạn chưa có tài khoản?{" "}
         <span

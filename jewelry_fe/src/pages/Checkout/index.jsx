@@ -1,7 +1,63 @@
-import { Button, Divider, Input } from "antd"
+import { Button, Divider, Form, Input, message, Select } from "antd"
 import CartDrawerItem from "../../components/CartDrawerItem"
+import { useCartStore } from "../../store/cart"
+import { formatCurrency } from "../../utils/formatText"
+import { getUserProfile } from "../../utils/auth"
+import { Controller, useForm } from "react-hook-form";
+import FormItem from "antd/es/form/FormItem"
+import ordersApi from "../../apis/orders"
+import { useNavigate } from "react-router-dom"
+import { paths } from "../../constants/paths"
+import { useState } from "react"
 
 const Checkout = () => {
+  const navigate = useNavigate();
+
+  const cart = useCartStore(s => s.cart)
+  const clearCart = useCartStore(s => s.clearCart)
+  const totalPrice = useCartStore(s => s.totalPrice(s))
+  const profile = getUserProfile();
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const { handleSubmit, control } = useForm({
+    defaultValues: {
+      name: profile?.name,
+      email: profile?.email,
+      paymentMethod: 1,
+      shippingAddress: ''
+    }
+  })
+
+  const onSubmit = async (values) => {
+    setIsLoading(true)
+
+    const orderItems = cart.map(item => ({
+      productId: item?.id,
+      quantity: item?.quantity
+    }))
+
+    const payload = {
+      shippingAddress: values?.shippingAddress,
+      orderItems,
+      paymentMethod: "Thanh toán khi nhận hàng",
+    }
+
+    const res = await ordersApi.create(payload)
+
+    if (res?.data) {
+      setTimeout(() => {
+        message.success("Đặt hàng thành công")
+        clearCart();
+        navigate(`${paths.PROFILE}${paths.ORDERS}`)
+        setIsLoading(false)
+      }, 2000)
+    } else {
+      setIsLoading(false)
+    }
+
+  }
+
   return (
     <div className="px-4 py-8">
       <div className="flex items-start gap-8">
@@ -18,40 +74,72 @@ const Checkout = () => {
           </div>
           <Divider className="border-gray-300 mt-0" />
 
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <p>
-                Họ và tên
-              </p>
-              <Input />
-            </div>
+          <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
+            <FormItem label={"Họ và tên"}>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    disabled
+                    required
+                  />
+                )}
+              />
+            </FormItem>
 
-            <div className="flex flex-col gap-2">
-              <p>
-                Email
-              </p>
-              <Input />
-            </div>
+            <FormItem label={"Email"}>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    disabled
+                    required
+                  />
+                )}
+              />
+            </FormItem>
 
-            <div className="flex flex-col gap-2">
-              <p>
-                Địa chỉ
-              </p>
-              <Input />
-            </div>
+            <FormItem label={"Địa chỉ"}>
+              <Controller
+                control={control}
+                name="shippingAddress"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    required
+                  />
+                )}
+              />
+            </FormItem>
 
-            <div className="flex flex-col gap-2">
-              <p>
-                Số điện thoại
-              </p>
-              <Input />
-            </div>
+            <FormItem label={"Phương thức thanh toán"}>
+              <Controller
+                control={control}
+                name="paymentMethod"
+                render={({ field }) => (
+                  <Select
+                    options={[{ value: 1, label: "Thanh toán khi nhận hàng" }]}
+                    {...field}
+                  />
+                )}
+              />
+            </FormItem>
 
-            <Button type="primary" className="p-2 h-auto">
-              Thanh toán
-            </Button>
-
-          </div>
+            <FormItem>
+              <Button
+                type="primary"
+                className="p-2 h-auto"
+                htmlType="submit"
+                loading={isLoading}
+              >
+                Thanh toán
+              </Button>
+            </FormItem>
+          </Form>
         </div>
 
         <div className="w-[500px] flex flex-col gap-4">
@@ -60,9 +148,9 @@ const Checkout = () => {
           </p>
           <Divider className="border-gray-300 mt-0" />
 
-          {Array.from({ length: 5 }).map((_, index) => (
+          {cart.map((product, index) => (
             <>
-              <CartDrawerItem key={index} isInCart />
+              <CartDrawerItem key={index} isInCart product={product} />
               <Divider className="my-1" />
             </>
           ))}
@@ -73,7 +161,7 @@ const Checkout = () => {
             </p>
 
             <p className="text-2xl font-semibold text-red-500">
-              100.000.000 ₫
+              {formatCurrency(Number(totalPrice))}
             </p>
           </div>
 

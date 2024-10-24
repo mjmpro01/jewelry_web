@@ -5,10 +5,13 @@ const urls = {
   PRODUCTS: 'products',
   CATEGORIES: 'categories',
   ORDERS: 'orders',
+  MY_ORDERS: 'orders/orders/me',
   UPLOAD: 'upload',
   LOGIN: 'auth/login',
+  REGISTER: 'auth/register',
   REFRESH_TOKEN: 'auth/refresh-token',
-  USERS: 'users'
+  USERS: 'users',
+  ME: 'users/me',
 }
 
 export default urls

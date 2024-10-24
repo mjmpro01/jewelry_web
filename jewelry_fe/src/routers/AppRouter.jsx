@@ -15,6 +15,9 @@ import ManageOrders from '../pages/Admin/ManageOrders';
 import LoginAdmin from '../pages/Admin/Login';
 import ManageUsers from '../pages/Admin/ManageUsers';
 import Products from '../pages/Products';
+import ProfileLayout from '../components/layouts/ProfileLayout';
+import ProfileInfo from '../pages/Profile/Info';
+import ProfileOrders from '../pages/Profile/Orders';
 
 const router = createBrowserRouter([
   // {
@@ -50,6 +53,20 @@ const router = createBrowserRouter([
       {
         path: `${paths.CHECKOUT}`,
         element: <Checkout />,
+      },
+      {
+        path: `${paths.PROFILE}`,
+        element: <ProfileLayout />,
+        children: [
+          {
+            path: `${paths.PROFILE}${paths.INFO}`,
+            element: <ProfileInfo />
+          },
+          {
+            path: `${paths.PROFILE}${paths.ORDERS}`,
+            element: <ProfileOrders />
+          },
+        ]
       },
     ],
   },

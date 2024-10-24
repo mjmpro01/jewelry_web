@@ -10,5 +10,9 @@ const authApi = {
     const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
     return axiosClient.post(urls.LOGIN, params)
   },
+  register(params, isAdmin = false) {
+    const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
+    return axiosClient.post(urls.REGISTER, params)
+  }
 };
 export default authApi;

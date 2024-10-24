@@ -1,16 +1,25 @@
 import { useParams } from "react-router-dom"
 import ProductSlider from "../../components/ProductSlider"
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { useEffect, useState } from "react";
 import productsApi from "../../apis/products";
 import { formatCurrency } from "../../utils/formatText";
+import { useCartStore } from "../../store/cart";
+import { useCartDrawerStore } from "../../store/cartDrawer";
 
 const ProductDetail = () => {
   const { slug } = useParams();
-  console.log("🚀 ~ file: index.jsx:7 ~ ProductDetail ~ slug:", slug)
 
   const [product, setProduct] = useState();
-  console.log("🚀 ~ file: index.jsx:12 ~ ProductDetail ~ product:", product)
+
+  const increaseCartProduct = useCartStore(state => state.increaseCartProduct)
+  const setIsOpenCartDrawer = useCartDrawerStore(s => s.setIsOpenCartDrawer);
+
+  const handleAddToCart = (product) => {
+    increaseCartProduct(product, 1);
+    message.success("Đã thêm vào giỏ hàng");
+    setIsOpenCartDrawer(true);
+  }
 
   useEffect(() => {
     const fetchProductDetail = async (slug) => {
@@ -42,7 +51,12 @@ const ProductDetail = () => {
           <p className="text-base text-[#726f6f]">
             {product?.description}
           </p>
-          <Button type="primary" danger className="w-full">
+          <Button
+            type="primary"
+            danger
+            className="w-full"
+            onClick={() => handleAddToCart(product)}
+          >
             Thêm vào giỏ hàng
           </Button>
         </div>

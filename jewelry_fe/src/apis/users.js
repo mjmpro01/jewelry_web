@@ -29,5 +29,9 @@ const usersApi = {
     const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
     return axiosClient.post(urls.USERS, body)
   },
+  me(isAdmin = false) {
+    const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
+    return axiosClient.get(urls.ME)
+  }
 };
 export default usersApi;

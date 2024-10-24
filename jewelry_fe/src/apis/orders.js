@@ -29,5 +29,10 @@ const ordersApi = {
     const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
     return axiosClient.post(urls.ORDERS, body)
   },
+  getMyOrders(params, isAdmin = false) {
+    const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
+    const transformedParams = queryString.stringify(params)
+    return axiosClient.get(`${urls.MY_ORDERS}?${transformedParams}`)
+  },
 };
 export default ordersApi;

@@ -17,8 +17,8 @@ export const createAxiosInstance = (tokenKey, refreshTokenKey) => {
 
   const refreshAccessToken = async (refreshToken) => {
     try {
-      const response = await axios.post(`${urls.REFRESH_TOKEN}`, { refreshToken });
-      const { accessToken, refreshToken: newRefreshToken } = response.data;
+      const response = await axios.post(`${urls.BASE_URL}/api/v1/${urls.REFRESH_TOKEN}`, { refreshToken });
+      const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
       // Update tokens in localStorage
       localStorage.setItem(tokenKey, accessToken);
@@ -48,19 +48,30 @@ export const createAxiosInstance = (tokenKey, refreshTokenKey) => {
       const { config: originalRequest, response } = error;
 
       if (response?.status === 401 && !originalRequest?._retry) {
-        originalRequest._retry = true;
-        const refreshToken = localStorage.getItem(refreshTokenKey);
-        if (!refreshToken || isTokenExpired(refreshToken)) {
-          handleSessionExpired();
-          return Promise.reject(new Error("Session expired"));
-        }
+        const isLoginRequest = originalRequest.url.includes(urls.LOGIN);
 
-        const newAccessToken = await refreshAccessToken(refreshToken);
-        try {
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return axiosInstance(originalRequest);
-        } catch (error) {
-          handleSessionExpired();
+        if (!isLoginRequest) {
+          originalRequest._retry = true;
+          const refreshToken = localStorage.getItem(refreshTokenKey);
+
+          if (!refreshToken) return Promise.reject(error)
+
+          if (isTokenExpired(refreshToken)) {
+            handleSessionExpired();
+            return Promise.reject(new Error("Session expired"));
+          }
+
+          const newAccessToken = await refreshAccessToken(refreshToken);
+          try {
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            return axiosInstance(originalRequest);
+          } catch (error) {
+            handleSessionExpired();
+            return Promise.reject(error);
+          }
+        } else {
+          // Nếu là yêu cầu đăng nhập, chỉ thông báo lỗi mà không redirect
+          message.error("Thông tin đăng nhập không chính xác. Vui lòng thử lại.");
           return Promise.reject(error);
         }
       }
@@ -93,65 +104,10 @@ const isTokenExpired = (token) => {
   }
 };
 
-// // Request interceptor
-// axiosClient.interceptors.request.use(
-//   (config) => {
-//     const accessToken = localStorage.getItem(variables.ACCESS_TOKEN);
-
-//     if (accessToken) {
-//       config.headers.Authorization = `Bearer ${accessToken}`;
-//     }
-
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
-// // Response interceptor
-// axiosClient.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const { config: originalRequest, response } = error;
-
-//     if (response?.status === 401 && !originalRequest?._retry) {
-//       originalRequest._retry = true;
-
-//       const refreshToken = localStorage.getItem(variables.REFRESH_TOKEN);
-
-//       if (!refreshToken || isTokenExpired(refreshToken)) {
-//         // Refresh token expired
-//         handleSessionExpired();
-//         return Promise.reject(new Error('Refresh token expired'));
-//       }
-
-//       try {
-//         const { data } = await authApi.refreshToken(refreshToken);
-//         const { accessToken, refreshToken: newRefreshToken } = data;
-
-//         // Update tokens in localStorage
-//         localStorage.setItem(variables.ACCESS_TOKEN, accessToken);
-//         localStorage.setItem(variables.REFRESH_TOKEN, newRefreshToken);
-
-//         // Retry original request with new token
-//         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-//         return axiosClient(originalRequest);
-//       } catch (refreshError) {
-//         // Refresh token request failed, handle session expiration
-//         handleSessionExpired();
-//         return Promise.reject(refreshError);
-//       }
-//     }
-
-//     // Handle other errors
-//     handleErrorResponse(response);
-//     return Promise.reject(error);
-//   }
-// );
-
 // Handle session expiration (clear tokens and redirect)
 const handleSessionExpired = () => {
-  localStorage.removeItem(variables.ACCESS_TOKEN);
-  localStorage.removeItem(variables.REFRESH_TOKEN);
+  localStorage.removeItem(variables.USER_ACCESS_TOKEN);
+  localStorage.removeItem(variables.USER_REFRESH_TOKEN);
   window.location.href = `${paths.HOME}`;
   message.info("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
 };
@@ -162,14 +118,12 @@ const handleErrorResponse = (response) => {
 
   switch (response.status) {
     case 400:
-      message.error("Yêu cầu không hợp lệ.");
+      message.error(response?.data?.error?.details?.message?.[0] || "Yêu cầu không hợp lệ.");
       break;
     case 500:
-      message.error("Có lỗi xảy ra. Không thể thực hiện hành động.");
+      message.error(response?.data?.error?.message || "Có lỗi xảy ra. Không thể thực hiện hành động.");
       break;
     default:
       message.error("Có lỗi xảy ra.");
   }
 };
-
-// export default axiosClient;

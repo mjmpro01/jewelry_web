@@ -10,4 +10,7 @@ export const paths = {
   MANAGE_CATEGORIES: '/quan-ly-danh-muc',
   MANAGE_ORDERS: '/quan-ly-don-hang',
   MANAGE_USERS: '/quan-ly-user',
+  PROFILE: '/ca-nhan',
+  INFO: '/thong-tin',
+  ORDERS: '/don-hang',
 }
