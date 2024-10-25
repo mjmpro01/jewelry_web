@@ -5,7 +5,7 @@ import { User } from 'src/user/entities/user.entity';
 
 import { CreateOrderDto } from './create-order.dto';
 
-export class UpdateOrderDto extends PartialType(CreateOrderDto) {
+export class  UpdateOrderDto extends PartialType(CreateOrderDto) {
   @ApiProperty()
   @IsString()
   status: string;
