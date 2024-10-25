@@ -1,4 +1,4 @@
-import { UserIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
+import { UserIcon, ShoppingBagIcon, Bars3Icon } from '@heroicons/react/24/outline'
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../constants/paths';
 import CartDrawer from '../CartDrawer';
@@ -6,9 +6,13 @@ import { useCartStore } from '../../store/cart';
 import { Badge } from 'antd';
 import { isUserLoggedIn } from '../../utils/auth';
 import { useCartDrawerStore } from '../../store/cartDrawer';
+import { useState } from 'react';
+import MenuDrawer from '../MenuDrawer';
 
 const Header = () => {
   const navigate = useNavigate();
+
+  const [isOpenMenuDrawer, setIsOpenMenuDrawer] = useState(false)
 
   const isOpenCartDrawer = useCartDrawerStore(s => s.isOpenCartDrawer);
   const setIsOpenCartDrawer = useCartDrawerStore(s => s.setIsOpenCartDrawer);
@@ -33,11 +37,12 @@ const Header = () => {
               Jewelry
             </p>
 
-            <p className=" text-md font-semibold cursor-pointer" onClick={() => navigate(paths.PRODUCTS)}>
+            <p className="hidden md:block text-md font-semibold cursor-pointer" onClick={() => navigate(paths.PRODUCTS)}>
               Danh sách sản phẩm
             </p>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="hidden md:flex items-center gap-4">
             <Badge color='blue' count={cart?.length}>
               <div
                 className="p-2 bg-slate-500 rounded-full flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
@@ -54,12 +59,34 @@ const Header = () => {
               <UserIcon className='size-4 text-white' />
             </div>
           </div>
+
+          <div className="md:hidden flex items-center gap-4">
+            <Badge color='blue' count={cart?.length}>
+              <div
+                className="p-2 bg-slate-500 rounded-full flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
+                onClick={() => setIsOpenCartDrawer(true)}
+              >
+                <ShoppingBagIcon className='size-4 text-white' />
+              </div>
+            </Badge>
+            <div
+              className="p-2 bg-slate-500 rounded-full flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
+              onClick={() => setIsOpenMenuDrawer(true)}
+            >
+              <Bars3Icon className='size-4 text-white' />
+            </div>
+          </div>
         </div>
       </header>
 
       <CartDrawer
         open={isOpenCartDrawer}
         onClose={() => setIsOpenCartDrawer(false)}
+      />
+
+      <MenuDrawer
+        open={isOpenMenuDrawer}
+        onClose={() => setIsOpenMenuDrawer(false)}
       />
     </>
   )

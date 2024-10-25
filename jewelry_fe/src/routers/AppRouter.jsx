@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import { paths } from '../constants/paths';
 import RootLayout from '../components/layouts/RootLayout';
 import Home from '../pages/Home';
@@ -18,6 +18,24 @@ import Products from '../pages/Products';
 import ProfileLayout from '../components/layouts/ProfileLayout';
 import ProfileInfo from '../pages/Profile/Info';
 import ProfileOrders from '../pages/Profile/Orders';
+import { isTokenExpired } from '../apis/axiosClient';
+import variables from '../constants/variables';
+
+const ProtectedRoute = () => {
+  const accessToken = localStorage.getItem(variables.USER_ACCESS_TOKEN);
+  const refreshToken = localStorage.getItem(variables.USER_REFRESH_TOKEN);
+
+  if (!accessToken || isTokenExpired(accessToken)) {
+    if (!refreshToken || isTokenExpired(refreshToken)) {
+      localStorage.removeItem(variables.USER_ACCESS_TOKEN);
+      localStorage.removeItem(variables.USER_REFRESH_TOKEN);
+      localStorage.removeItem(variables.USER_PROFILE);
+      return <Navigate to={paths.LOGIN} />;
+    }
+  }
+
+  return <Outlet />;
+};
 
 const router = createBrowserRouter([
   // {
@@ -51,23 +69,29 @@ const router = createBrowserRouter([
         element: <ProductDetail />,
       },
       {
-        path: `${paths.CHECKOUT}`,
-        element: <Checkout />,
-      },
-      {
-        path: `${paths.PROFILE}`,
-        element: <ProfileLayout />,
+        element: <ProtectedRoute />,
         children: [
           {
-            path: `${paths.PROFILE}${paths.INFO}`,
-            element: <ProfileInfo />
+            path: `${paths.CHECKOUT}`,
+            element: <Checkout />,
           },
           {
-            path: `${paths.PROFILE}${paths.ORDERS}`,
-            element: <ProfileOrders />
+            path: `${paths.PROFILE}`,
+            element: <ProfileLayout />,
+            children: [
+              {
+                path: `${paths.PROFILE}${paths.INFO}`,
+                element: <ProfileInfo />
+              },
+              {
+                path: `${paths.PROFILE}${paths.ORDERS}`,
+                element: <ProfileOrders />
+              },
+            ]
           },
         ]
       },
+
     ],
   },
   {

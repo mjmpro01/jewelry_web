@@ -32,7 +32,7 @@ const CartDrawerItem = ({ isInCart, product }) => {
       <div className="flex flex-col gap-4 w-full">
         <div className="flex items-center justify-between gap-4 w-full">
           <p
-            className="text-base font-normal truncate text-black w-[200px] cursor-pointer"
+            className="text-base font-normal truncate text-black w-[150px] md:w-[200px] cursor-pointer"
             onClick={() => navigate(`${paths.PRODUCTS}/${product?.slug}`)}
           >
             {product?.name}

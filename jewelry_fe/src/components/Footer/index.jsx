@@ -2,7 +2,7 @@ import { svgs } from "../../assets/svgs"
 
 const Footer = () => {
   return (
-    <div className="container mx-auto grid grid-cols-2 gap-4 my-8">
+    <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 my-8 px-4">
       <div className="flex flex-col gap-4">
         <p className="text-lg font-semibold">
           Công Ty Cổ Phần Vàng Bạc Đá Quý

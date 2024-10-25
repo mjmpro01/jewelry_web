@@ -21,12 +21,16 @@ const LoginAdmin = () => {
       res => res?.data?.data
     ).then(
       data => {
-        localStorage?.setItem(variables.ADMIN_ACCESS_TOKEN, data.accessToken)
-        localStorage?.setItem(variables.ADMIN_REFRESH_TOKEN, data.refreshToken)
-        message.success("Đăng nhập thành công")
-        setTimeout(() => {
-          navigate(`${paths.ADMIN}${paths.MANAGE_PRODUCTS}`)
-        }, 2000)
+        if (data?.roles?.[0] === 'USER') {
+          message.error("Không đủ quyền truy cập");
+        } else {
+          localStorage?.setItem(variables.ADMIN_ACCESS_TOKEN, data.accessToken)
+          localStorage?.setItem(variables.ADMIN_REFRESH_TOKEN, data.refreshToken)
+          message.success("Đăng nhập thành công")
+          setTimeout(() => {
+            navigate(`${paths.ADMIN}${paths.MANAGE_PRODUCTS}`)
+          }, 2000)
+        }
       }
     )
   }

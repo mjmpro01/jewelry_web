@@ -15,8 +15,8 @@ const ProfileLayout = () => {
   }
 
   return (
-    <div className="grid grid-cols-[30%_1fr] my-4">
-      <div className="flex flex-col gap-8 items-center border-r">
+    <div className="grid grid-cols-1 md:grid-cols-[30%_1fr] my-4">
+      <div className="hidden md:flex flex-col gap-8 items-center border-r">
         <Avatar size={64} icon={<UserOutlined />} />
 
         <p

@@ -83,17 +83,8 @@ export const createAxiosInstance = (tokenKey, refreshTokenKey) => {
   return axiosInstance
 }
 
-// Create an axios instance
-// const axiosClient = axios.create({
-//   baseURL: `${urls.BASE_URL}/api/v1`,
-//   headers: {
-//     accept: "application/json",
-//     "Content-Type": "application/json",
-//   },
-// });
-
 // Utility to check if token is expired
-const isTokenExpired = (token) => {
+export const isTokenExpired = (token) => {
   try {
     const decoded = jwtDecode(token);
     const currentTime = Date.now() / 1000; // Time in seconds

@@ -23,7 +23,7 @@ const Home = () => {
         <HomeBannerSlider />
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {products.slice(0, 8).map((product, index) => (
           <ProductCard product={product} key={index} />
         ))}
@@ -36,7 +36,7 @@ const Home = () => {
         className="w-full h-auto aspect-[3/1] object-cover rounded-2xl mb-4"
       />
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {products.slice(8, 16).map((product, index) => (
           <ProductCard key={index} product={product} />
         ))}

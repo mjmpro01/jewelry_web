@@ -9,7 +9,9 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { paths } from '../../../constants/paths';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import variables from '../../../constants/variables';
+import { isTokenExpired } from '../../../apis/axiosClient';
 
 const { Header, Content, Sider } = Layout;
 
@@ -63,6 +65,25 @@ const AdminLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const handleLogOut = () => {
+    localStorage.removeItem(variables.ADMIN_ACCESS_TOKEN)
+    localStorage.removeItem(variables.ADMIN_REFRESH_TOKEN)
+    navigate(`${paths.ADMIN}${paths.LOGIN}`)
+  }
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem(variables.ADMIN_ACCESS_TOKEN);
+    const refreshToken = localStorage.getItem(variables.ADMIN_REFRESH_TOKEN);
+
+    if (!accessToken || isTokenExpired(accessToken)) {
+      if (!refreshToken || isTokenExpired(refreshToken)) {
+        localStorage.removeItem(variables.ADMIN_ACCESS_TOKEN);
+        localStorage.removeItem(variables.ADMIN_REFRESH_TOKEN);
+        navigate(`${paths.ADMIN}${paths.LOGIN}`)
+      }
+    }
+  }, [navigate]);
+
   return (
     <div>
       <Layout hasSider>
@@ -93,7 +114,7 @@ const AdminLayout = () => {
           }}
         >
           <Header style={{ padding: 0, background: colorBgContainer }} className='flex justify-end px-8'>
-            <p className='cursor-pointer'>
+            <p className='cursor-pointer text-red-500' onClick={handleLogOut}>
               Đăng xuất
             </p>
           </Header>
