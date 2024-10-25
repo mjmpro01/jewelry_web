@@ -1,8 +1,7 @@
-import { Button, Drawer, Form, Input, message, Select, Table } from "antd"
+import { Button, Drawer, Form, Image, Input, message, Select, Table, Tooltip } from "antd"
 import { useEffect, useState } from "react"
 import ordersApi from "../../apis/orders";
-import { formatCurrency } from "../../utils/formatText";
-import dayjs from "dayjs";
+import { formatCurrency, formatDate } from "../../utils/formatText";
 import usersApi from "../../apis/users";
 import { orderStatusOptions } from "../../constants/orderStatus";
 
@@ -18,10 +17,17 @@ const ViewDrawerOrder = ({ open, onClose, order, refetchData, ...rest }) => {
 
   const columns = [
     {
-      title: 'Name',
+      title: 'Sản phẩm',
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
+      render: (item) => <Tooltip title={item} placement="topLeft">{item}</Tooltip>
+    },
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'image',
+      key: 'image',
+      render: (item) => <Image src={item} className="size-16" />
     },
     {
       title: 'Số lượng',
@@ -49,11 +55,12 @@ const ViewDrawerOrder = ({ open, onClose, order, refetchData, ...rest }) => {
         totalAmount: formatCurrency(orderData?.totalAmount) || '',
         shippingAddress: orderData?.shippingAddress || '',
         paymentMethod: orderData?.paymentMethod || 0,
-        createdAt: dayjs(orderData?.createdAt).format('DD/MM/YYYY')
+        createdAt: formatDate(orderData?.createdAt)
       });
 
       const dataSource = orderData?.orderItems?.map(order => ({
         name: order?.product?.name,
+        image: order?.product?.gallery?.[0],
         quantity: order?.quantity,
         price: formatCurrency(order?.product?.price),
       }))

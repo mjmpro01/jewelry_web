@@ -11,7 +11,7 @@ export const translatedOrderStatus = {
   pending: 'Chờ xác nhận',
   processing: 'Đang chuẩn bị hàng',
   shipped: 'Đang vận chuyển',
-  dilivered: 'Đã giao hàng',
+  delivered: 'Đã giao hàng',
   success: 'Thành công',
   cancelled: 'Đã huỷ',
 }

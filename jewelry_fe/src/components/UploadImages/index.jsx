@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Flex, Upload } from 'antd';
+import { Flex, Image, Upload } from 'antd';
 import urls from '../../constants/urls';
+
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 const UploadImages = (props) => {
   const { defaultFileList, onUploadComplete, fieldKey, maxCount, disabled, ...rest } = props;
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
-  console.log("🚀 ~ file: index.jsx:10 ~ UploadImages ~ fileList:", fileList)
 
   useEffect(() => {
     if (defaultFileList) {
@@ -15,45 +25,25 @@ const UploadImages = (props) => {
     }
   }, [defaultFileList]);
 
-  const handleChange = (info) => {
-    console.log("🚀 ~ file: index.jsx:18 ~ handleChange ~ info:", info)
-    let updatedFileList = [...info.fileList];
-
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      setFileList(updatedFileList);
-    } else if (info.file.status === 'done') {
-      setLoading(false);
-      const fileUrl = info.file.response?.url; // Extract the file URL from the API response
-      // Get this url from response in real world.
-      if (fileUrl) {
-        updatedFileList = updatedFileList.map(file => {
-          if (file.uid === info.file.uid) {
-            return {
-              ...file,
-              status: 'done',
-              url: fileUrl || file.url || URL.createObjectURL(file.originFileObj)
-            }
-          }
-          return file
-
-        })
-      }
-
-      setFileList(updatedFileList);
-
-      const imageUrls = updatedFileList.map(file => file.url || URL.createObjectURL(file.originFileObj));
-      onUploadComplete?.(imageUrls);
-    } else if (info.file.status === 'removed') {
-      updatedFileList = updatedFileList.filter(file => file.uid !== info.file.uid); // Remove the deleted image URL
-      onUploadComplete?.(updatedFileList.map(file => file.url)); // Pass updated array to parent
-      setFileList(updatedFileList);
-      return;
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
     }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    setLoading(true);
+
+    setFileList(newFileList)
+
+    onUploadComplete?.(newFileList); // Pass updated array to parent
+
+    setLoading(false);
   };
 
   const handleSuccess = (response, file) => {
-    console.log("🚀 ~ file: index.jsx:54 ~ handleSuccess ~ response:", response)
     // Update the fileList when upload is successful
     const updatedFileList = fileList.map(f => (f.uid === file.uid ? { ...f, url: response.url, status: 'done' } : f))
     setFileList(updatedFileList);
@@ -88,15 +78,31 @@ const UploadImages = (props) => {
         className="avatar-uploader"
         fileList={fileList}
         action={`${urls.BASE_URL}/api/v1/${urls.UPLOAD}`}
+        onPreview={handlePreview}
         onChange={handleChange}
         onSuccess={handleSuccess}
         onError={(error) => {
           console.error("Upload error:", error);
         }}
+        onRemove={(file) => console.log(file)}
+        showUploadList={{ showRemoveIcon: !disabled }}
         {...rest}
       >
         {!disabled && fileList?.length < (maxCount || Infinity) && uploadButton}
       </Upload>
+      {previewImage && (
+        <Image
+          wrapperStyle={{
+            display: 'none',
+          }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+            afterOpenChange: (visible) => !visible && setPreviewImage(''),
+          }}
+          src={previewImage}
+        />
+      )}
     </Flex>
   );
 };

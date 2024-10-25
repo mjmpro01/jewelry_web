@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { Layout, Menu, theme } from 'antd';
 import {
-  DashboardOutlined,
   DollarOutlined,
   ProductOutlined,
   ProfileOutlined,
@@ -27,11 +26,11 @@ const siderStyle = {
 
 
 const menuItems = [
-  {
-    key: `${paths.ADMIN}`,
-    icon: <DashboardOutlined />,
-    label: 'Bảng điều khiển'
-  },
+  // {
+  //   key: `${paths.ADMIN}${paths.DASHBOARD}`,
+  //   icon: <DashboardOutlined />,
+  //   label: 'Bảng điều khiển'
+  // },
   {
     key: `${paths.ADMIN}${paths.MANAGE_PRODUCTS}`,
     icon: <ProductOutlined />,
@@ -93,7 +92,11 @@ const AdminLayout = () => {
             height: '100vh',
           }}
         >
-          <Header style={{ padding: 0, background: colorBgContainer }} />
+          <Header style={{ padding: 0, background: colorBgContainer }} className='flex justify-end px-8'>
+            <p className='cursor-pointer'>
+              Đăng xuất
+            </p>
+          </Header>
           <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
             <div
               style={{

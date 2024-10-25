@@ -1,10 +1,9 @@
 import { message, Space, Table, Tag, Tooltip } from "antd"
 import { Fragment, useEffect, useState } from "react"
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
-import dayjs from 'dayjs'
 
 import ordersApi from "../../../apis/orders"
-import { formatCurrency } from "../../../utils/formatText"
+import { formatCurrency, formatDate } from "../../../utils/formatText"
 import ViewDrawerOrder from "../../../components/ViewDrawerOrder"
 import { translatedOrderStatus } from "../../../constants/orderStatus"
 // import CreateOrderModal from "../../../components/CreateOrderModal"
@@ -59,7 +58,7 @@ const ManageOrders = () => {
         totalAmount: formatCurrency(order?.totalAmount) || '',
         shippingAddress: order?.shippingAddress || '',
         paymentMethod: order?.paymentMethod || 0,
-        createdAt: dayjs(order?.createdAt).format('DD/MM/YYYY')
+        createdAt: formatDate(order?.createdAt)
       }
     })
     setDataSource(dataSource)

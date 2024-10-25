@@ -13,6 +13,9 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
 
   const [categoryOptions, setCategoryOptions] = useState([])
 
+  const [imageFileList, setImageFileList] = useState([])
+  const [galleryFileList, setGalleryFileList] = useState([])
+
   const { handleSubmit, control, formState: { errors }, setValue } = useForm();
 
   useEffect(() => {
@@ -50,8 +53,6 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
       setValue('categoryId', prodData.categoryId)
       setValue('image', imageFileList)
       setValue('gallery', galleryFileList)
-      // setValue('image', prodData.image)
-      // setValue('gallery', prodData.gallery)
       setValue('slug', prodData.slug)
     }
 
@@ -77,21 +78,27 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
 
   const onFinish = async (values) => {
     setIsSubmitLoading(true);
-    const galleryUrls = values.gallery.map(img => {
-      if (img?.url) return img.url;
-      return img
-    })
 
-    await productsApi.update(productData?.id, {
+
+    const bodyUpdate = {
       name: values.name,
       description: values.description,
       categoryId: values.categoryId,
       price: Number(values.price),
       slug: values.slug,
       stockQuantity: values.stockQuantity,
-      image: values.image[0].url,
-      gallery: galleryUrls,
-    }, true).then(() => {
+    }
+
+    if (imageFileList?.length) {
+      bodyUpdate['image'] = imageFileList?.[0].url
+    }
+
+    if (galleryFileList?.length) {
+      const galleryUrls = galleryFileList.map(img => img?.url)
+      bodyUpdate['gallery'] = galleryUrls
+    }
+
+    await productsApi.update(productData?.id, bodyUpdate, true).then(() => {
       setTimeout(async () => {
         setIsSubmitLoading(false);
         setIsEdit(false)
@@ -276,10 +283,9 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
                 <UploadImages
                   maxCount={1}
                   fieldKey={'file'}
-                  // disabled={!isEdit}
-                  disabled
+                  disabled={!isEdit}
                   defaultFileList={field.value}
-                  onUploadComplete={(fileUrls) => field.onChange(fileUrls[0])}
+                  onUploadComplete={(fileList) => setImageFileList(fileList)}
                 />
                 <ErrorMessage
                   errors={errors}
@@ -301,12 +307,12 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
                 <UploadImages
                   maxCount={6}
                   fieldKey={'file'}
-                  // disabled={!isEdit}
-                  disabled
+                  disabled={!isEdit}
                   defaultFileList={field.value}
-                  onUploadComplete={(fileUrls) => {
-                    field.onChange(fileUrls);
+                  onUploadComplete={(fileList) => {
+                    setGalleryFileList(fileList)
                   }}
+                  multiple
                 />
                 <ErrorMessage
                   errors={errors}

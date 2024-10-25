@@ -12,7 +12,7 @@ const LoginAdmin = () => {
 
   useEffect(() => {
     if (accessToken) {
-      navigate(`${paths.ADMIN}${paths.DASHBOARD}`)
+      navigate(`${paths.ADMIN}${paths.MANAGE_PRODUCTS}`)
     }
   }, [accessToken, navigate])
 
@@ -25,7 +25,7 @@ const LoginAdmin = () => {
         localStorage?.setItem(variables.ADMIN_REFRESH_TOKEN, data.refreshToken)
         message.success("Đăng nhập thành công")
         setTimeout(() => {
-          navigate(`${paths.ADMIN}${paths.DASHBOARD}`)
+          navigate(`${paths.ADMIN}${paths.MANAGE_PRODUCTS}`)
         }, 2000)
       }
     )
