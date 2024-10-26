@@ -2,6 +2,8 @@ import { Button, Drawer, Form, Input, message } from "antd"
 import { useEffect, useState } from "react"
 import categoriesApi from "../../apis/categories"
 
+const { TextArea } = Input;
+
 const ViewDrawerCategory = ({ open, onClose, category, refetchData, ...rest }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
@@ -84,8 +86,9 @@ const ViewDrawerCategory = ({ open, onClose, category, refetchData, ...rest }) =
             label={"Mô tả"}
             name={"description"}
           >
-            <Input
+            <TextArea
               disabled={!isEdit}
+              rows={4}
             />
           </Form.Item>
 

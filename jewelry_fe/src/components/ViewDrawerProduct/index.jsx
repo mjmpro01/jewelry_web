@@ -6,6 +6,8 @@ import UploadImages from "../UploadImages";
 import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 
+const { TextArea } = Input;
+
 const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
@@ -211,10 +213,11 @@ const ViewDrawerProduct = ({ open, onClose, product, refetchData, ...rest }) => 
             control={control}
             render={({ field }) => (
               <Form.Item label="Mô tả" >
-                <InputNumber
+                <TextArea
                   {...field}
                   disabled={!isEdit}
                   className="w-full"
+                  rows={4}
                 />
                 <ErrorMessage
                   errors={errors}
