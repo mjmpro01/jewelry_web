@@ -15,7 +15,7 @@ const ProductCard = ({ product }) => {
           src={product?.image}
           width={600}
           height={600}
-          className="aspect-square w-full h-full hover:scale-110 transition-all"
+          className="aspect-square w-full h-full hover:scale-110 transition-all object-cover"
         />
       </div>
       <div className="flex flex-col gap-0.5">

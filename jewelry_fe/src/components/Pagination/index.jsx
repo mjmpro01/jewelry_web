@@ -1,7 +1,9 @@
 import { ConfigProvider, Pagination } from 'antd';
-import { useSearchParams } from 'react-router-dom';
+import queryString from 'query-string';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const PaginationComponent = ({ pagination }) => {
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams({
     page: "1",
     pageSize: "12",
@@ -24,6 +26,7 @@ const PaginationComponent = ({ pagination }) => {
         pageSize={pageSize || 12}
         onChange={(page, pageSize) => {
           const updatedParams = new URLSearchParams({
+            ...queryString.parse(location.search),
             page: page.toString(),
             pageSize: pageSize.toString(),
           });

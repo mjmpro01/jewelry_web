@@ -8,10 +8,10 @@ const axiosClientUser = createAxiosInstance(variables.USER_ACCESS_TOKEN, variabl
 const axiosClientAdmin = createAxiosInstance(variables.ADMIN_ACCESS_TOKEN, variables.ADMIN_REFRESH_TOKEN)
 
 const productsApi = {
-  getAll(params, isAdmin = false) {
+  getAll(params, isAdmin = false, query = '') {
     const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
     const transformedParams = queryString.stringify(params)
-    return axiosClient.get(`${urls.PRODUCTS}?${transformedParams}`)
+    return axiosClient.get(`${urls.PRODUCTS}?${transformedParams}${query}`)
   },
   update(id, body, isAdmin = false) {
     const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
