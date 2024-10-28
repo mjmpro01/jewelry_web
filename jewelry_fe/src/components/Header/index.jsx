@@ -6,13 +6,15 @@ import { useCartStore } from '../../store/cart';
 import { Badge } from 'antd';
 import { isUserLoggedIn } from '../../utils/auth';
 import { useCartDrawerStore } from '../../store/cartDrawer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MenuDrawer from '../MenuDrawer';
+import categoriesApi from '../../apis/categories';
 
 const Header = () => {
   const navigate = useNavigate();
 
   const [isOpenMenuDrawer, setIsOpenMenuDrawer] = useState(false)
+  const [categories, setCategories] = useState([]);
 
   const isOpenCartDrawer = useCartDrawerStore(s => s.isOpenCartDrawer);
   const setIsOpenCartDrawer = useCartDrawerStore(s => s.setIsOpenCartDrawer);
@@ -28,6 +30,16 @@ const Header = () => {
     return;
   }
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await categoriesApi.getAll().then(res => res.data.data);
+
+      setCategories(categories)
+    }
+
+    fetchCategories()
+  }, [])
+
   return (
     <>
       <header>
@@ -40,6 +52,16 @@ const Header = () => {
             <p className="hidden md:block text-md font-semibold cursor-pointer" onClick={() => navigate(paths.PRODUCTS)}>
               Danh sách sản phẩm
             </p>
+
+            {categories.slice(0, 4)?.map(((cat, index) => (
+              <p
+                className="hidden md:block text-md font-semibold cursor-pointer"
+                onClick={() => navigate(`${paths.PRODUCTS}?danh-muc=${cat.slug}`, { state: { categoryId: cat.id } })}
+                key={index}
+              >
+                {cat.name}
+              </p>
+            )))}
           </div>
 
           <div className="hidden md:flex items-center gap-4">

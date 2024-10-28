@@ -123,12 +123,16 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       {
-        path: `${paths.ADMIN}${paths.DASHBOARD}`,
-        element: <Dashboard />
+        index: true,
+        element: <Navigate to={`${paths.ADMIN}${paths.LOGIN}`} replace />
       },
       {
         path: `${paths.ADMIN}${paths.LOGIN}`,
         element: <Login />,
+      },
+      {
+        path: `${paths.ADMIN}${paths.DASHBOARD}`,
+        element: <Dashboard />
       },
       {
         path: `${paths.ADMIN}${paths.MANAGE_PRODUCTS}`,
