@@ -68,7 +68,22 @@ export class ProductService {
 
     this.logger.log(ctx, `calling ${ProductRepository.name}.findAndCount`);
     const queryBuilder = this.repository.createQueryBuilder('product');
-
+    queryBuilder.select([
+      'product.id',
+      'product.name',
+      'product.price',
+      'product.sku',
+      'product.stockQuantity',
+      'product.categoryId',
+      'product.description',
+      'product.image',
+      'product.slug',
+      'product.createdAt',
+      'product.updatedAt',
+      'product.gallery',
+      'product.category',
+      // Add any other fields you want to include
+    ]);
     if (query.name) {
       queryBuilder.andWhere('product.name LIKE :name', {
         name: `%${query.name}%`,
@@ -92,7 +107,6 @@ export class ProductService {
       // Default sorting if none provided
       queryBuilder.orderBy('product.createdAt', 'DESC');
     }
-
     const page = query.page || 1;
     const pageSize = query.pageSize || 10;
     const skip = (page - 1) * pageSize;
@@ -100,7 +114,6 @@ export class ProductService {
     queryBuilder.skip(skip).take(pageSize);
 
     const [products, total] = await queryBuilder.getManyAndCount();
-
     const productsOutput = plainToClass(ProductOutput, products, {
       excludeExtraneousValues: true,
     });
