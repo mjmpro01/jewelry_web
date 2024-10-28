@@ -176,4 +176,28 @@ export class CategoryController {
 
     return this.categoryService.deleteCategory(ctx, id);
   }
+
+  @Get('slug/:slug')
+  @ApiOperation({
+    summary: 'Get product by slug API',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: SwaggerBaseApiResponse(CategoryOutput),
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    type: BaseApiErrorResponse,
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getProductBySlug(
+    @ReqContext() ctx: RequestContext,
+    @Param('slug') slug: string,
+  ): Promise<BaseApiResponse<CategoryOutput>> {
+    this.logger.log(ctx, `${this.getProductBySlug.name} was called`);
+
+    const category = await this.categoryService.getCategoryBySlug(ctx, slug);
+    return { data: category, meta: {} };
+  }
+
 }

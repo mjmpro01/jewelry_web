@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -148,6 +149,31 @@ export class UserController {
     this.logger.log(ctx, `${this.updateUser.name} was called`);
 
     const user = await this.userService.updateUser(ctx, userId, input);
+    return { data: user, meta: {} };
+  }
+
+  // TODO: delete user
+  // NOTE : This can be made a admin only endpoint. For normal users they can use DELETE /me
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete user API',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: SwaggerBaseApiResponse(UserOutput),
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    type: BaseApiErrorResponse,
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async deleteUser(
+    @ReqContext() ctx: RequestContext,
+    @Param('id') userId: number,
+  ): Promise<BaseApiResponse<UserOutput>> {
+    this.logger.log(ctx, `${this.deleteUser.name} was called`);
+
+    const user = await this.userService.removeUser(ctx, userId);
     return { data: user, meta: {} };
   }
 }
