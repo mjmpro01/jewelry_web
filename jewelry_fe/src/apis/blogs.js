@@ -35,5 +35,9 @@ const blogsApi = {
     const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
     return axiosClient.post(urls.BLOGS, body);
   },
+  getBySlug(slug, isAdmin = false) {
+    const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
+    return axiosClient.get(`${urls.BLOGS}/slug/${slug}`);
+  },
 };
 export default blogsApi;

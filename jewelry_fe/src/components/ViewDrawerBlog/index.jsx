@@ -50,7 +50,7 @@ const ViewDrawerBlog = ({ open, onClose, blog, refetchData, ...rest }) => {
     setIsSubmitLoading(true);
     await blogsApi.update(blogData?.id, {
       title: values.title,
-      content: values.content,
+      content: contentValue,
       thumbnail: imageFileList?.[0]?.url
     }, true).then(() => {
       setTimeout(async () => {
