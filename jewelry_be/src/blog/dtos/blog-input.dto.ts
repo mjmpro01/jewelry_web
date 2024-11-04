@@ -18,11 +18,16 @@ export class UpdateBlogInput {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  name?: string;
+  title?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   content?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  slug?: string;
 }
 

@@ -132,8 +132,8 @@ export class BlogService {
       ...input,
     };
 
-    if (input.name) {
-      updatedBlog.slug = handleSlug(input.name);
+    if (input.title) {
+      updatedBlog.slug = handleSlug(input.title);
     }
 
     this.logger.log(ctx, `calling ${BlogRepository.name}.save`);
