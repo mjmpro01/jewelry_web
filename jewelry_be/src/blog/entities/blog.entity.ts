@@ -15,6 +15,9 @@ export class Blog {
   @Column('text', { nullable: true })
   content: string;
 
+  @Column('text', { nullable: true })
+  thumbnail: string;
+
 
   @CreateDateColumn()
   createdAt: Date;

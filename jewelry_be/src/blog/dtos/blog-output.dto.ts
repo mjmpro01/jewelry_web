@@ -21,6 +21,10 @@ export class BlogOutput {
 
   @Expose()
   @ApiProperty()
+  thumbnail: string;
+
+  @Expose()
+  @ApiProperty()
   createdAt: Date;
 
   @Expose()

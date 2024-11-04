@@ -11,6 +11,11 @@ export class CreateBlogInput {
   @IsOptional()
   @IsString()
   content?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  thumbnail?: string;
 }
 
 export class UpdateBlogInput {
@@ -29,5 +34,10 @@ export class UpdateBlogInput {
   @IsOptional()
   @IsString()
   slug?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  thumbnail?: string;
 }
 
