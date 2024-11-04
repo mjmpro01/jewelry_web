@@ -20,6 +20,8 @@ import ProfileInfo from '../pages/Profile/Info';
 import ProfileOrders from '../pages/Profile/Orders';
 import { isTokenExpired } from '../apis/axiosClient';
 import variables from '../constants/variables';
+import ManageBlogs from '../pages/Admin/ManageBlogs';
+import Blogs from '../pages/Blogs';
 
 const ProtectedRoute = () => {
   const accessToken = localStorage.getItem(variables.USER_ACCESS_TOKEN);
@@ -67,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: `${paths.PRODUCTS}/:slug`,
         element: <ProductDetail />,
+      },
+      {
+        path: paths.BLOGS,
+        element: <Blogs />,
       },
       {
         element: <ProtectedRoute />,
@@ -149,6 +155,10 @@ const router = createBrowserRouter([
       {
         path: `${paths.ADMIN}${paths.MANAGE_USERS}`,
         element: <ManageUsers />,
+      },
+      {
+        path: `${paths.ADMIN}${paths.MANAGE_BLOGS}`,
+        element: <ManageBlogs />,
       }
     ]
   },

@@ -62,6 +62,10 @@ const Header = () => {
                 {cat.name}
               </p>
             )))}
+
+            <p className="hidden md:block text-md font-semibold cursor-pointer" onClick={() => navigate(paths.BLOGS)}>
+              Blog
+            </p>
           </div>
 
           <div className="hidden md:flex items-center gap-4">

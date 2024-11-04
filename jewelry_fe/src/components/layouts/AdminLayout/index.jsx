@@ -4,6 +4,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Layout, Menu, theme } from 'antd';
 import {
   DollarOutlined,
+  FileTextOutlined,
   ProductOutlined,
   ProfileOutlined,
   UserOutlined,
@@ -52,6 +53,11 @@ const menuItems = [
     key: `${paths.ADMIN}${paths.MANAGE_USERS}`,
     icon: <UserOutlined />,
     label: 'Quản lý User'
+  },
+  {
+    key: `${paths.ADMIN}${paths.MANAGE_BLOGS}`,
+    icon: <FileTextOutlined />,
+    label: 'Quản lý Blog'
   },
 ]
 
