@@ -15,4 +15,5 @@ export const paths = {
   INFO: "/thong-tin",
   ORDERS: "/don-hang",
   BLOGS: "/blogs",
+  SEARCH_RESULT: "/ket-qua-tim-kiem",
 };

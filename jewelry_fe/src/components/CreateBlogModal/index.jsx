@@ -11,8 +11,6 @@ const CreateBlogModal = ({ isModalOpen, handleOk, handleCancle, ...rest }) => {
   const [contentValue, setContentValue] = useState('');
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ file: index.jsx:13 ~ onSubmit ~ data:", data)
-
     if (!contentValue) {
       message.error("Chưa nhập nội dung blog!");
       return;

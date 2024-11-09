@@ -46,7 +46,6 @@ const ViewDrawerBlog = ({ open, onClose, blog, refetchData, ...rest }) => {
   }, [blog, form]);
 
   const onFinish = async (values) => {
-    // console.log("🚀 ~ file: index.jsx:39 ~ onFinish ~ imageFileList:", imageFileList)
     setIsSubmitLoading(true);
     await blogsApi.update(blogData?.id, {
       title: values.title,

@@ -6,11 +6,14 @@ import productsApi from "../../apis/products"
 
 const Home = () => {
   const [products, setProducts] = useState([])
+  const [latestProducts, setLastestProducts] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       const products = await productsApi.getAll().then(res => res?.data?.data)
-      setProducts(products)
+      const latestProducts = await productsApi.getLatest().then(res => res?.data?.data)
+      setProducts(products);
+      setLastestProducts(latestProducts)
     }
 
     fetchData()
@@ -21,6 +24,28 @@ const Home = () => {
       <div className="mb-4">
 
         <HomeBannerSlider />
+      </div>
+
+      <div className="flex flex-col gap-2 mb-4">
+        <h3 className="font-semibold text-xl uppercase">
+          Mới nhất
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {latestProducts.slice(0, 8).map((product, index) => (
+            <ProductCard product={product} key={index} />
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 mb-4">
+        <h3 className="font-semibold text-xl uppercase">
+          Bán chạy
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {products.slice(0, 8).map((product, index) => (
+            <ProductCard product={product} key={index} />
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

@@ -7,7 +7,6 @@ const BlogDetail = () => {
   const { slug } = useParams();
 
   const [blog, setBlog] = useState()
-  console.log("🚀 ~ file: index.jsx:9 ~ BlogDetail ~ blog:", blog)
 
   useEffect(() => {
     const fetchProductDetail = async (slug) => {

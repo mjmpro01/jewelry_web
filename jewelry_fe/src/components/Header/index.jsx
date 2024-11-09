@@ -3,18 +3,19 @@ import { useNavigate } from 'react-router-dom'
 import { paths } from '../../constants/paths';
 import CartDrawer from '../CartDrawer';
 import { useCartStore } from '../../store/cart';
-import { Badge } from 'antd';
+import { Badge, Input } from 'antd';
 import { isUserLoggedIn } from '../../utils/auth';
 import { useCartDrawerStore } from '../../store/cartDrawer';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MenuDrawer from '../MenuDrawer';
-import categoriesApi from '../../apis/categories';
+
+const { Search } = Input;
 
 const Header = () => {
   const navigate = useNavigate();
 
   const [isOpenMenuDrawer, setIsOpenMenuDrawer] = useState(false)
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   const isOpenCartDrawer = useCartDrawerStore(s => s.isOpenCartDrawer);
   const setIsOpenCartDrawer = useCartDrawerStore(s => s.setIsOpenCartDrawer);
@@ -30,15 +31,20 @@ const Header = () => {
     return;
   }
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const categories = await categoriesApi.getAll().then(res => res.data.data);
+  const handleOnSearch = (value) => {
+    const searchParams = new URLSearchParams({ "tim-kiem": value })
+    navigate(`${paths.SEARCH_RESULT}?${searchParams.toString()}`)
+  }
 
-      setCategories(categories)
-    }
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     const categories = await categoriesApi.getAll().then(res => res.data.data);
 
-    fetchCategories()
-  }, [])
+  //     setCategories(categories)
+  //   }
+
+  //   fetchCategories()
+  // }, [])
 
   return (
     <>
@@ -53,7 +59,7 @@ const Header = () => {
               Danh sách sản phẩm
             </p>
 
-            {categories.slice(0, 4)?.map(((cat, index) => (
+            {/* {categories.slice(0, 4)?.map(((cat, index) => (
               <p
                 className="hidden md:block text-md font-semibold cursor-pointer"
                 onClick={() => navigate(`${paths.PRODUCTS}?danh-muc=${cat.slug}`, { state: { categoryId: cat.id } })}
@@ -61,7 +67,7 @@ const Header = () => {
               >
                 {cat.name}
               </p>
-            )))}
+            )))} */}
 
             <p className="hidden md:block text-md font-semibold cursor-pointer" onClick={() => navigate(paths.BLOGS)}>
               Blog
@@ -69,6 +75,8 @@ const Header = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            <Search placeholder="input search text" onSearch={handleOnSearch} />
+
             <Badge color='blue' count={cart?.length}>
               <div
                 className="p-2 bg-slate-500 rounded-full flex items-center justify-center hover:scale-110 transition-all cursor-pointer"

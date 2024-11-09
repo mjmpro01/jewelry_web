@@ -23,6 +23,7 @@ import variables from '../constants/variables';
 import ManageBlogs from '../pages/Admin/ManageBlogs';
 import Blogs from '../pages/Blogs';
 import BlogDetail from '../pages/BlogDetail';
+import SearchResult from '../pages/SearchResult';
 
 const ProtectedRoute = () => {
   const accessToken = localStorage.getItem(variables.USER_ACCESS_TOKEN);
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
       {
         path: paths.BLOGS,
         element: <Blogs />,
+      },
+      {
+        path: paths.SEARCH_RESULT,
+        element: <SearchResult />,
       },
       {
         path: `${paths.BLOGS}/:slug`,
