@@ -3,6 +3,7 @@ import { isUserLoggedIn } from '../../utils/auth'
 import { paths } from '../../constants/paths'
 import variables from '../../constants/variables'
 import { useNavigate } from 'react-router-dom'
+import Search from 'antd/es/transfer/search'
 
 const menuList = [
   {
@@ -38,6 +39,11 @@ const MenuDrawer = ({ open, onClose }) => {
     navigate(paths.HOME)
   }
 
+  const handleOnSearch = (value) => {
+    const searchParams = new URLSearchParams({ "tim-kiem": value })
+    navigate(`${paths.SEARCH_RESULT}?${searchParams.toString()}`)
+  }
+
   return (
     <Drawer
       onClose={onClose}
@@ -49,6 +55,7 @@ const MenuDrawer = ({ open, onClose }) => {
       }}
     >
       <div className='flex flex-col gap-8 p-8'>
+        <Search placeholder="input search text" onSearch={handleOnSearch} />
         {menu.map((item, index) => (
           <div
             key={index}
