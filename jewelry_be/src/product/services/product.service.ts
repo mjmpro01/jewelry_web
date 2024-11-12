@@ -6,7 +6,7 @@ import { Action } from '../../shared/acl/action.constant';
 import { Actor } from '../../shared/acl/actor.constant';
 import { AppLogger } from '../../shared/logger/logger.service';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
-import { handleSlug } from '../../shared/utils/slugify';
+import { slugify } from '../../shared/utils/slugify';
 import {
   CreateProductInput,
   UpdateProductInput,
@@ -49,9 +49,9 @@ export class ProductService {
     );
 
     const product = plainToClass(Product, input);
-    product.slug = handleSlug(input.name);
+    product.slug = slugify(input.name);
     product.category = category;
-    product.sku = await this.generateUniqueSKU();
+
     this.logger.log(ctx, `calling ${ProductRepository.name}.save`);
     const savedProduct = await this.repository.save(product);
 
@@ -63,27 +63,12 @@ export class ProductService {
   async getProducts(
     ctx: RequestContext,
     query: GetProductQueryDto,
-  ): Promise<{ products: ProductOutput[]; pagination: any }> {
+  ): Promise<{ products: ProductOutput[]; count: number }> {
     this.logger.log(ctx, `${this.getProducts.name} was called`);
 
     this.logger.log(ctx, `calling ${ProductRepository.name}.findAndCount`);
     const queryBuilder = this.repository.createQueryBuilder('product');
-    queryBuilder.select([
-      'product.id',
-      'product.name',
-      'product.price',
-      'product.sku',
-      'product.stockQuantity',
-      'product.categoryId',
-      'product.description',
-      'product.image',
-      'product.slug',
-      'product.createdAt',
-      'product.updatedAt',
-      'product.gallery',
-      'product.category',
-      // Add any other fields you want to include
-    ]);
+
     if (query.name) {
       queryBuilder.andWhere('product.name LIKE :name', {
         name: `%${query.name}%`,
@@ -107,28 +92,13 @@ export class ProductService {
       // Default sorting if none provided
       queryBuilder.orderBy('product.createdAt', 'DESC');
     }
-    const page = query.page || 1;
-    const pageSize = query.pageSize || 10;
-    const skip = (page - 1) * pageSize;
+    const [products, count] = await queryBuilder.getManyAndCount();
 
-    queryBuilder.skip(skip).take(pageSize);
-
-    const [products, total] = await queryBuilder.getManyAndCount();
     const productsOutput = plainToClass(ProductOutput, products, {
       excludeExtraneousValues: true,
     });
 
-    const pageCount = Math.ceil(total / pageSize);
-
-    return {
-      products: productsOutput,
-      pagination: {
-        page,
-        pageSize,
-        pageCount,
-        total,
-      },
-    };
+    return { products: productsOutput, count };
   }
 
   async getProductById(
@@ -137,17 +107,17 @@ export class ProductService {
   ): Promise<ProductOutput> {
     this.logger.log(ctx, `${this.getProductById.name} was called`);
 
-    // const actor: Actor = ctx.user!;
+    const actor: Actor = ctx.user!;
 
     this.logger.log(ctx, `calling ${ProductRepository.name}.getById`);
     const product = await this.repository.getById(id);
 
-    // const isAllowed = this.aclService
-    //   .forActor(actor)
-    //   .canDoAction(Action.Read, product);
-    // if (!isAllowed) {
-    //   throw new UnauthorizedException();
-    // }
+    const isAllowed = this.aclService
+      .forActor(actor)
+      .canDoAction(Action.Read, product);
+    if (!isAllowed) {
+      throw new UnauthorizedException();
+    }
 
     return plainToClass(ProductOutput, product, {
       excludeExtraneousValues: true,
@@ -160,8 +130,17 @@ export class ProductService {
   ): Promise<ProductOutput> {
     this.logger.log(ctx, `${this.getProductBySlug.name} was called`);
 
+    const actor: Actor = ctx.user!;
+
     this.logger.log(ctx, `calling ${ProductRepository.name}.getBySlug`);
     const product = await this.repository.getBySlug(slug);
+
+    const isAllowed = this.aclService
+      .forActor(actor)
+      .canDoAction(Action.Read, product);
+    if (!isAllowed) {
+      throw new UnauthorizedException();
+    }
 
     return plainToClass(ProductOutput, product, {
       excludeExtraneousValues: true,
@@ -193,7 +172,7 @@ export class ProductService {
     };
 
     if (input.name) {
-      updatedProduct.slug = handleSlug(input.name);
+      updatedProduct.slug = slugify(input.name);
     }
 
     if (input.categoryId) {
@@ -230,32 +209,8 @@ export class ProductService {
     this.logger.log(ctx, `calling ${ProductRepository.name}.remove`);
     await this.repository.remove(product);
   }
+}
 
-  private async generateUniqueSKU(): Promise<string> {
-    let sku: string = '';
-    let isUnique = false;
-
-    while (!isUnique) {
-      sku = this.generateSKU();
-      const existingProduct = await this.repository.findOne({ where: { sku } });
-      if (!existingProduct) {
-        isUnique = true;
-      }
-    }
-
-    return sku;
-  }
-
-  private generateSKU(): string {
-    const numbers = Math.floor(10000000 + Math.random() * 90000000).toString();
-    const letters = this.generateRandomLetters(2);
-    return `${numbers}_${letters}`;
-  }
-
-  private generateRandomLetters(length: number): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    return Array.from({ length }, () =>
-      characters.charAt(Math.floor(Math.random() * characters.length)),
-    ).join('');
-  }
+export default function Component() {
+  return null;
 }

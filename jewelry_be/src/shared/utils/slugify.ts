@@ -8,3 +8,5 @@ export function handleSlug(text: string): string {
     remove: /[*+~.()?=&,$/'"!:@]/g,       // trim leading and trailing replacement chars, defaults to `true`
   })
 }
+
+export { slugify }

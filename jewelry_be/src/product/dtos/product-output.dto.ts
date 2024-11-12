@@ -56,4 +56,9 @@ export class ProductOutput {
   @Expose()
   @ApiProperty()
   gallery: string[];
+
+  @Expose()
+  @ApiProperty()
+  totalPurchases: number;
+
 }

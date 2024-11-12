@@ -8,7 +8,7 @@ import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 
 import { ProductRepository } from '../../product/repositories/product.repository';
-import { ProductService } from '../../product/services/product.service';
+import { ProductService } from '../../product/services/product.service';  
 import { Action } from '../../shared/acl/action.constant';
 import { Actor } from '../../shared/acl/actor.constant';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
@@ -30,9 +30,12 @@ export class OrderService {
     private readonly ProductRepository: ProductRepository,
     private aclService: OrderAclService,
     private userService: UserService,
-    
   ) {}
-
+  generateOrderCode(): string {
+    const timestamp = Date.now().toString();
+    const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+    return `ORD-${timestamp}-${randomPart}`;
+  }
   async create(
     createOrderDto: CreateOrderDto,
     ctx: RequestContext,
@@ -40,7 +43,7 @@ export class OrderService {
     const actor: Actor = ctx.user!;
     const isAllowed = this.aclService
       .forActor(actor)
-      .canDoAction(Action.Create, Order)
+      .canDoAction(Action.Create, Order);
 
     if (!isAllowed) {
       throw new UnauthorizedException();
@@ -49,7 +52,8 @@ export class OrderService {
     order.orderItems = [];
     order.userId = actor.id;
     let totalAmount = 0;
-
+    const orderCode = this.generateOrderCode();
+    order.orderCode = orderCode;
     for (const item of createOrderDto.orderItems) {
       const product = await this.productService.getProductById(
         ctx,
@@ -67,6 +71,11 @@ export class OrderService {
         { id: product.id },
         'stockQuantity',
         item.quantity,
+      );
+      await this.ProductRepository.increment(
+        { id: product.id },
+        'totalPurchases',
+        1,
       );
     }
 
@@ -91,13 +100,17 @@ export class OrderService {
     return order;
   }
 
-  async update(ctx: RequestContext, id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
+  async update(
+    ctx: RequestContext,
+    id: number,
+    updateOrderDto: UpdateOrderDto,
+  ): Promise<Order> {
     const actor: Actor = ctx.user!;
     console.log(actor);
     const isAllowed = this.aclService
       .forActor(actor)
-      .canDoAction(Action.Update, Order)
-    
+      .canDoAction(Action.Update, Order);
+
     if (!isAllowed) {
       throw new UnauthorizedException();
     }
@@ -105,7 +118,9 @@ export class OrderService {
     if (updateOrderDto.userId) {
       const user = await this.userService.findById(ctx, updateOrderDto.userId);
       if (!user) {
-        throw new NotFoundException(`Người dùng với ID ${updateOrderDto.userId} không tìm thấy`);
+        throw new NotFoundException(
+          `Người dùng với ID ${updateOrderDto.userId} không tìm thấy`,
+        );
       }
       order.user = user as unknown as User;
     }
@@ -113,12 +128,11 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
-
   async remove(ctx: RequestContext, id: number): Promise<void> {
     const actor: Actor = ctx.user!;
     const isAllowed = this.aclService
       .forActor(actor)
-      .canDoAction(Action.Update, Order)
+      .canDoAction(Action.Update, Order);
 
     if (!isAllowed) {
       throw new UnauthorizedException();
@@ -134,8 +148,8 @@ export class OrderService {
     const actor: Actor = ctx.user!;
     const isAllowed = this.aclService
       .forActor(actor)
-      .canDoAction(Action.Read, Order)
-    
+      .canDoAction(Action.Read, Order);
+
     if (!isAllowed) {
       throw new UnauthorizedException();
     }

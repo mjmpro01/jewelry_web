@@ -46,6 +46,9 @@ export class Product {
   @Column('simple-array', { nullable: true })
   gallery: string[];
 
+  @Column('int', { default: 0 })
+  totalPurchases: number;
+
   @CreateDateColumn({ name: 'createdAt' })
   createdAt: Date;
 
