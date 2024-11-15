@@ -1,9 +1,10 @@
-import { Drawer } from 'antd'
+import { Drawer, Input } from 'antd'
 import { isUserLoggedIn } from '../../utils/auth'
 import { paths } from '../../constants/paths'
 import variables from '../../constants/variables'
 import { useNavigate } from 'react-router-dom'
-import Search from 'antd/es/transfer/search'
+
+const { Search } = Input;
 
 const menuList = [
   {
@@ -40,8 +41,10 @@ const MenuDrawer = ({ open, onClose }) => {
   }
 
   const handleOnSearch = (value) => {
+    console.log("🚀 ~ file: index.jsx:43 ~ handleOnSearch ~ value:", value)
     const searchParams = new URLSearchParams({ "tim-kiem": value })
     navigate(`${paths.SEARCH_RESULT}?${searchParams.toString()}`)
+    onClose()
   }
 
   return (
@@ -55,7 +58,7 @@ const MenuDrawer = ({ open, onClose }) => {
       }}
     >
       <div className='flex flex-col gap-8 p-8'>
-        <Search placeholder="input search text" onSearch={handleOnSearch} />
+        <Search placeholder="Nhập sản phẩm cần tìm" onSearch={handleOnSearch} size="large" />
         {menu.map((item, index) => (
           <div
             key={index}

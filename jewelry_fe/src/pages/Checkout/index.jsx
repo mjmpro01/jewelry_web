@@ -30,6 +30,7 @@ const Checkout = () => {
   })
 
   const onSubmit = async (values) => {
+    console.log("🚀 ~ file: index.jsx:33 ~ onSubmit ~ values:", values)
     setIsLoading(true)
 
     const orderItems = cart.map(item => ({
@@ -40,7 +41,7 @@ const Checkout = () => {
     const payload = {
       shippingAddress: values?.shippingAddress,
       orderItems,
-      paymentMethod: "Thanh toán khi nhận hàng",
+      paymentMethod: values.paymentMethod === 1 ? "Thanh toán khi nhận hàng" : "Thanh toán qua VNPAY",
     }
 
     const res = await ordersApi.create(payload)
@@ -122,7 +123,10 @@ const Checkout = () => {
                 name="paymentMethod"
                 render={({ field }) => (
                   <Select
-                    options={[{ value: 1, label: "Thanh toán khi nhận hàng" }]}
+                    options={[
+                      { value: 1, label: "Thanh toán khi nhận hàng" },
+                      { value: 2, label: "Thanh toán qua VNPAY" }
+                    ]}
                     {...field}
                   />
                 )}

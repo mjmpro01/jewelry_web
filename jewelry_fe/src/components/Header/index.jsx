@@ -75,7 +75,7 @@ const Header = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <Search placeholder="input search text" onSearch={handleOnSearch} />
+            <Search placeholder="Nhập sản phẩm cần tìm" onSearch={handleOnSearch} />
 
             <Badge color='blue' count={cart?.length}>
               <div

@@ -2,16 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+@font-face {
+  font-family: 'Roboto';
+  src: url(./assets/fonts/Roboto-Regular.ttf) format('truetype');
   font-weight: 400;
+  /* Normal weight */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(./assets/fonts/Roboto-Bold.ttf) format('truetype');
+  font-weight: 700;
+  /* Bold weight */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(./assets/fonts/Roboto-Light.ttf) format('truetype');
+  font-weight: 300;
+  /* Light weight */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(./assets/fonts/Roboto-Medium.ttf) format('truetype');
+  font-weight: 500;
+  /* Medium weight */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(./assets/fonts/Roboto-Thin.ttf) format('truetype');
+  font-weight: 100;
+  /* Thin weight */
+  font-style: normal;
+}
+
+:root {
+  font-family: Roboto;
+  line-height: 1.5;
   font-size: 16px;
 
-  font-synthesis: none;
+  /* font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; */
 }
 
 .keen-slider__slide {
