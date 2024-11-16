@@ -4,6 +4,7 @@ import { paths } from "../../../constants/paths";
 import authApi from "../../../apis/auth";
 import variables from "../../../constants/variables";
 import { useEffect } from "react";
+import { images } from "../../../assets/images";
 
 const LoginAdmin = () => {
   const navigate = useNavigate();
@@ -36,57 +37,55 @@ const LoginAdmin = () => {
   }
 
   return (
-    <Form
-      className="flex flex-col w-[300px]"
-      layout="vertical"
-      onFinish={onFinish}
-      initialValues={{
-        username: 'default-admin',
-        password: 'admin-example'
-      }}
-    >
-      <h3
-        className="text-center font-bold text-3xl uppercase mb-8 cursor-pointer"
-        onClick={() => navigate(paths.HOME)}
-      >
-        JEWELRY ADMIN
-      </h3>
-      <Form.Item
-        className="flex flex-col gap-2 mb-4"
-        label="Email"
-        name={'username'}
-        rules={[{ required: true }]}
-      >
-        <Input />
-      </Form.Item>
+    <div className="flex items-center rounded-lg shadow text-yellow-700 bg-white">
+      <img src={images.loginAdminBanner} className="hidden md:block w-[400px] rounded-tl-lg rounded-bl-lg" />
 
-      <Form.Item
-        className="flex flex-col gap-2 mb-8"
-        label="Mật khẩu"
-        name={'password'}
-        rules={[{ required: true }]}
+      <Form
+        className="flex flex-col w-[400px] p-8 !text-yellow-700"
+        layout="vertical"
+        onFinish={onFinish}
+        initialValues={{
+          username: 'default-admin',
+          password: 'admin-example'
+        }}
       >
-        <Input type="password" />
-      </Form.Item>
-
-      <Button
-        type="primary"
-        className="p-2 h-auto mb-4"
-        htmlType="submit"
-      >
-        Đăng nhập
-      </Button>
-
-      <p className="text-sm text-center">
-        Bạn chưa có tài khoản?{" "}
-        <span
-          className="font-bold text-blue-500 italic hover:underline cursor-pointer"
-          onClick={() => navigate(paths.REGISTER)}
+        <div
+          className="flex items-center gap-2 mb-8 cursor-pointer"
+          onClick={() => navigate(paths.HOME)}
         >
-          Đăng ký
-        </span>
-      </p>
-    </Form>
+          <img src={images.logo} className="w-[40px]" />
+
+          <h3 className="text-center font-bold text-3xl uppercase cursor-pointer"          >
+            JEWELRY ADMIN
+          </h3>
+        </div>
+        <Form.Item
+          className="flex flex-col gap-2 mb-4 !text-yellow-700"
+          label="Email"
+          name={'username'}
+          rules={[{ required: true }]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          className="flex flex-col gap-2 mb-8"
+          label="Mật khẩu"
+          name={'password'}
+          rules={[{ required: true }]}
+        >
+          <Input type="password" />
+        </Form.Item>
+
+        <Button
+          type="primary"
+          className="p-2 h-auto mb-4 bg-yellow-700"
+          htmlType="submit"
+        >
+          Đăng nhập
+        </Button>
+      </Form>
+    </div >
   )
 }
 

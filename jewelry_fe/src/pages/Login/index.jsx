@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import authApi from "../../apis/auth";
 import variables from "../../constants/variables";
 import usersApi from "../../apis/users";
+import { images } from "../../assets/images";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -38,61 +39,72 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col w-[300px]">
-      <h3
-        className="text-center font-bold text-3xl uppercase mb-8 cursor-pointer"
-        onClick={() => navigate(paths.HOME)}
-      >
-        JEWELRY
-      </h3>
-      <form
-        className="flex flex-col"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-
-        <Controller
-          name="username"
-          control={control}
-          render={({ field }) => (
-            <div className="flex flex-col gap-2 mb-4">
-              <p className="text-base font-semibold">
-                Username
-              </p>
-              <Input {...field} />
-            </div>
-          )}
-        />
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <div className="flex flex-col gap-2 mb-8">
-              <p className="text-base font-semibold">
-                Mật khẩu
-              </p>
-              <Input type="password" {...field} />
-            </div>
-          )}
-        />
-
-        <Button
-          type="primary"
-          className="p-2 h-auto mb-4"
-          htmlType="submit"
+    <div className="flex items-center rounded-lg shadow text-yellow-700 bg-white">
+      <img src={images.loginBanner} className="hidden md:block w-[400px] rounded-tl-lg rounded-bl-lg" />
+      <div className="flex flex-col w-[400px] p-8">
+        <div
+          className="flex items-center gap-2 mb-8 cursor-pointer"
+          onClick={() => navigate(paths.HOME)}
         >
-          Đăng nhập
-        </Button>
-      </form>
+          <img src={images.logo} className="w-[40px]" />
+          <h3 className="text-center font-bold text-3xl uppercase text-yellow-700">
+            JEWELRY
+          </h3>
+        </div>
 
-      <p className="text-sm text-center">
-        Bạn chưa có tài khoản?{" "}
-        <span
-          className="font-bold text-blue-500 italic hover:underline cursor-pointer"
-          onClick={() => navigate(paths.REGISTER)}
+        <h4 className="uppercase text-4xl mt-4 mb-8 text-yellow-700">
+          Đăng nhập ngay bằng tài khoản Jewelry
+        </h4>
+
+        <form
+          className="flex flex-col"
+          onSubmit={handleSubmit(onSubmit)}
         >
-          Đăng ký
-        </span>
-      </p>
+
+          <Controller
+            name="username"
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-col gap-2 mb-4">
+                <p className="text-base font-semibold">
+                  Username
+                </p>
+                <Input {...field} />
+              </div>
+            )}
+          />
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-col gap-2 mb-8">
+                <p className="text-base font-semibold">
+                  Mật khẩu
+                </p>
+                <Input type="password" {...field} />
+              </div>
+            )}
+          />
+
+          <Button
+            type="primary"
+            className="p-2 h-auto mb-4 bg-yellow-700"
+            htmlType="submit"
+          >
+            Đăng nhập
+          </Button>
+        </form>
+
+        <p className="text-sm text-center">
+          Bạn chưa có tài khoản?{" "}
+          <span
+            className="font-bold text-blue-500 italic hover:underline cursor-pointer"
+            onClick={() => navigate(paths.REGISTER)}
+          >
+            Đăng ký
+          </span>
+        </p>
+      </div>
     </div>
   )
 }

@@ -22,8 +22,13 @@ const Home = () => {
   return (
     <div className="p-4">
       <div className="mb-4">
-
         <HomeBannerSlider />
+      </div>
+
+      <div className="md:grid md:grid-cols-3 flex items-center overflow-auto md:overflow-hidden gap-2 mb-4">
+        <img src={images.miniBanner1} />
+        <img src={images.miniBanner2} />
+        <img src={images.miniBanner3} />
       </div>
 
       <div className="flex flex-col gap-2 mb-4">

@@ -8,6 +8,7 @@ import { isUserLoggedIn } from '../../utils/auth';
 import { useCartDrawerStore } from '../../store/cartDrawer';
 import { useState } from 'react';
 import MenuDrawer from '../MenuDrawer';
+import { images } from '../../assets/images';
 
 const { Search } = Input;
 
@@ -51,9 +52,12 @@ const Header = () => {
       <header>
         <div className="flex items-center justify-between p-4">
           <div className='flex items-center gap-8'>
-            <p className="logo text-2xl font-bold cursor-pointer" onClick={() => navigate(paths.HOME)}>
-              Jewelry
-            </p>
+            <div className='flex items-center justify-center gap-2'>
+              <img src={images.logo} className='w-[40px]' />
+              <p className="logo text-2xl font-bold cursor-pointer text-yellow-700" onClick={() => navigate(paths.HOME)}>
+                Jewelry
+              </p>
+            </div>
 
             <p className="hidden md:block text-md font-semibold cursor-pointer" onClick={() => navigate(paths.PRODUCTS)}>
               Danh sách sản phẩm
