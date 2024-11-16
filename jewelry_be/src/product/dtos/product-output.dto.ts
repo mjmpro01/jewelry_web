@@ -24,9 +24,9 @@ export class ProductOutput {
   @ApiProperty()
   price: number;
 
-  @Expose()
-  @ApiProperty()
-  sku: string;
+  // @Expose()
+  // @ApiProperty()
+  // sku: string;
 
   @Expose()
   @ApiProperty()

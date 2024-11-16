@@ -27,8 +27,8 @@ export class Product {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Column()
-  sku: string;
+  // @Column()
+  // sku: string;
 
   @Column('int')
   stockQuantity: number;
