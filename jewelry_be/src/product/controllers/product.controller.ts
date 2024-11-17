@@ -154,7 +154,7 @@ export class ProductController {
     return this.productService.deleteProduct(ctx, id);
   }
 
-  @Get(':slug')
+  @Get('/slug/:slug')
   @ApiOperation({
     summary: 'Get product by slug API',
   })
