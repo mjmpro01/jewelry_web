@@ -49,5 +49,15 @@ const productsApi = {
     });
     return axiosClient.get(`${urls.PRODUCTS}?${transformedParams}`);
   },
+  getTopPurchase(isAdmin = false) {
+    const axiosClient = isAdmin ? axiosClientAdmin : axiosClientUser;
+    const transformedParams = queryString.stringify({
+      orderBy: "totalPurchases",
+      order: "DESC",
+      pageSize: 10,
+      page: 1,
+    });
+    return axiosClient.get(`${urls.PRODUCTS}?${transformedParams}`);
+  },
 };
 export default productsApi;
