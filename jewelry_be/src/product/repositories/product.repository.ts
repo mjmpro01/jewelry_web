@@ -21,6 +21,7 @@ export class ProductRepository extends Repository<Product> {
   }
 
   async getBySlug(slug: string): Promise<Product> {
+    console.log(slug);
     const product = await this.findOne({
       where: { slug },
       relations: ['category'],

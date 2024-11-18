@@ -169,10 +169,10 @@ export class ProductController {
   @UseInterceptors(ClassSerializerInterceptor)
   async getProductBySlug(
     @ReqContext() ctx: RequestContext,
-    @Param('id') slug: string,
+    @Param('slug') slug: string,
   ): Promise<BaseApiResponse<ProductOutput>> {
     this.logger.log(ctx, `${this.getProduct.name} was called`);
-
+    console.log("slug", slug);
     const product = await this.productService.getProductBySlug(ctx, slug);
     return { data: product, meta: {} };
   }
