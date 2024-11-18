@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PaymentService } from './payment.service';
@@ -22,9 +23,9 @@ export class PaymentController {
     return this.paymentService.createPaymentUrl(body.order_code);
   }
   @Get('vnpay-return')
-  async vnpayReturn(@Query() query: any) {
+  async vnpayReturn(@Query() query: any,  @Res() res: Response) {
     const result = await this.paymentService.vnpayReturn(query);
-    return result;
+    return res.redirect(result.redirectUrl);
   }
 }
  
