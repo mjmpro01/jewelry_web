@@ -13,6 +13,7 @@ const urls = {
   USERS: "users",
   ME: "users/me",
   BLOGS: "blogs",
+  CREATE_PAYMENT: "payment/create-payment",
 };
 
 export default urls;

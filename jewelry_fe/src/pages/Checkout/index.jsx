@@ -9,6 +9,7 @@ import ordersApi from "../../apis/orders"
 import { useNavigate } from "react-router-dom"
 import { paths } from "../../constants/paths"
 import { useState } from "react"
+import paymentsApi from "../../apis/payments"
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -29,9 +30,19 @@ const Checkout = () => {
     }
   })
 
+  const createLinkVNPay = async (orderCode) => {
+    await paymentsApi.createPayment(orderCode).then((res) => {
+      window.location.replace(res?.data?.url);
+    }).finally(() => {
+      setIsLoading(false)
+      message.success("Đặt hàng thành công")
+    })
+  }
+
   const onSubmit = async (values) => {
-    console.log("🚀 ~ file: index.jsx:33 ~ onSubmit ~ values:", values)
     setIsLoading(true)
+
+    let orderId = -1
 
     const orderItems = cart.map(item => ({
       productId: item?.id,
@@ -41,28 +52,35 @@ const Checkout = () => {
     const payload = {
       shippingAddress: values?.shippingAddress,
       orderItems,
-      paymentMethod: values.paymentMethod === 1 ? "Thanh toán khi nhận hàng" : "Thanh toán qua VNPAY",
+      paymentMethod: values.paymentMethod === 1 ? "COD" : "VNPAY",
     }
 
-    const res = await ordersApi.create(payload)
-
-    if (res?.data) {
-      setTimeout(() => {
-        message.success("Đặt hàng thành công")
-        clearCart();
-        navigate(`${paths.PROFILE}${paths.ORDERS}`)
+    const res = await ordersApi.create(payload).then(res => res.data).then(res => {
+      if (res?.id) {
+        orderId = res?.id
+        setTimeout(() => {
+          if (values.paymentMethod === 1) {
+            navigate(`${paths.ORDER_SUCESS}/${res?.id}`)
+            setIsLoading(false)
+            message.success("Đặt hàng thành công")
+          } else {
+            createLinkVNPay(res?.orderCode)
+            // navigate(`${paths.PROFILE}${paths.ORDERS}`)
+          }
+          clearCart();
+        }, 2000)
+      } else {
         setIsLoading(false)
-      }, 2000)
-    } else {
-      setIsLoading(false)
-    }
-
+      }
+    }).catch(() => {
+      navigate(`${paths.ORDER_FAIL}/${orderId}`)
+    })
   }
 
   return (
     <div className="px-4 py-8">
-      <div className="flex items-start gap-8">
-        <div className="sticky top-4 flex-1 flex flex-col gap-4">
+      <div className="flex flex-col md:flex-row items-start gap-8">
+        <div className="md:sticky top-4 flex-1 flex flex-col gap-4 w-full">
           <div className="flex items-center gap-4">
             {/* <div className="rounded-full bg-black flex items-center justify-center w-8 h-auto aspect-square">
               <p className="text-base font-normal text-white">
