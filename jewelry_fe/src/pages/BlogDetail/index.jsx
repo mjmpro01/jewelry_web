@@ -21,14 +21,14 @@ const BlogDetail = () => {
   }, [slug])
 
   return (
-    <div className="mx-4">
-      <p className="mx-auto text-center text-3xl max-w-[500px]">
+    <article className="mx-4">
+      <h2 className="mx-auto text-center text-3xl max-w-[500px] mb-8">
         {blog?.title}
-      </p>
-      <div>
+      </h2>
+      <div className="prose mx-auto max-w-[1000px]">
         {formatContent(blog?.content)}
       </div>
-    </div>
+    </article>
   )
 }
 

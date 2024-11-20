@@ -1,0 +1,17 @@
+// vite.config.js
+import path from "path";
+import react from "file:///Users/phucdinh/Documents/Code/Freelance/jewelry_web/jewelry_fe/node_modules/.pnpm/@vitejs+plugin-react-swc@3.7.0_vite@5.4.8/node_modules/@vitejs/plugin-react-swc/index.mjs";
+import { defineConfig } from "file:///Users/phucdinh/Documents/Code/Freelance/jewelry_web/jewelry_fe/node_modules/.pnpm/vite@5.4.8/node_modules/vite/dist/node/index.js";
+var __dirname = path.resolve();
+var vite_config_default = defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@/*": path.resolve(__dirname, "./src/*")
+    }
+  }
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCIvVXNlcnMvcGh1Y2RpbmgvRG9jdW1lbnRzL0NvZGUvRnJlZWxhbmNlL2pld2Vscnlfd2ViL2pld2VscnlfZmVcIjtjb25zdCBfX3ZpdGVfaW5qZWN0ZWRfb3JpZ2luYWxfZmlsZW5hbWUgPSBcIi9Vc2Vycy9waHVjZGluaC9Eb2N1bWVudHMvQ29kZS9GcmVlbGFuY2UvamV3ZWxyeV93ZWIvamV3ZWxyeV9mZS92aXRlLmNvbmZpZy5qc1wiO2NvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9pbXBvcnRfbWV0YV91cmwgPSBcImZpbGU6Ly8vVXNlcnMvcGh1Y2RpbmgvRG9jdW1lbnRzL0NvZGUvRnJlZWxhbmNlL2pld2Vscnlfd2ViL2pld2VscnlfZmUvdml0ZS5jb25maWcuanNcIjtpbXBvcnQgcGF0aCBmcm9tICdwYXRoJztcblxuaW1wb3J0IHJlYWN0IGZyb20gJ0B2aXRlanMvcGx1Z2luLXJlYWN0LXN3Yyc7XG5pbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tICd2aXRlJztcblxuY29uc3QgX19kaXJuYW1lID0gcGF0aC5yZXNvbHZlKCk7XG5cbi8vIGh0dHBzOi8vdml0ZWpzLmRldi9jb25maWcvXG5leHBvcnQgZGVmYXVsdCBkZWZpbmVDb25maWcoe1xuICBwbHVnaW5zOiBbcmVhY3QoKV0sXG4gIHJlc29sdmU6IHtcbiAgICBhbGlhczoge1xuICAgICAgJ0AvKic6IHBhdGgucmVzb2x2ZShfX2Rpcm5hbWUsICcuL3NyYy8qJyksXG4gICAgfSxcbiAgfSxcbn0pOyJdLAogICJtYXBwaW5ncyI6ICI7QUFBK1csT0FBTyxVQUFVO0FBRWhZLE9BQU8sV0FBVztBQUNsQixTQUFTLG9CQUFvQjtBQUU3QixJQUFNLFlBQVksS0FBSyxRQUFRO0FBRy9CLElBQU8sc0JBQVEsYUFBYTtBQUFBLEVBQzFCLFNBQVMsQ0FBQyxNQUFNLENBQUM7QUFBQSxFQUNqQixTQUFTO0FBQUEsSUFDUCxPQUFPO0FBQUEsTUFDTCxPQUFPLEtBQUssUUFBUSxXQUFXLFNBQVM7QUFBQSxJQUMxQztBQUFBLEVBQ0Y7QUFDRixDQUFDOyIsCiAgIm5hbWVzIjogW10KfQo=

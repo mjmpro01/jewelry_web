@@ -15,10 +15,12 @@ export const formatContent = (content) => {
 
   return parse(cleanedContent, {
     replace: (domNode) => {
-      if (domNode.name === "img") {
-        // Thêm style cho thẻ <img>
-        domNode.attribs.style =
-          "aspect-ratio: 4 / 2; object-fit: cover; max-width: 80%; margin: 0 auto;"; // Thêm style tùy chỉnh
+      if (domNode.type === "tag") {
+        if (domNode.name === "img") {
+          // Thêm style cho thẻ <img>
+          domNode.attribs.style =
+            "aspect-ratio: 4 / 2; object-fit: cover; max-width: 100%; margin: 10px auto;"; // Thêm style tùy chỉnh
+        } else domNode.attribs.style = "margin-bottom: 10px;";
       }
     },
   });
